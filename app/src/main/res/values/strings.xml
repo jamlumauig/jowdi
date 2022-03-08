@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Jowdi</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment"> " WHO ARE YOU? " </string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="enter_your_name_here">Enter Your Name Here</string>
+    <string name="hbd">HAPPY BIRTHDAY!</string>
+
+    <string name="textsample">"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."</string>
+    <string-array name="picture">
+        <item>"https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=204,h=192,fit=crop/mPoyZVg96EI62K0E/Mask-Group-YXNDZyOxqLuzkpxb.png"</item>
+        <item>"https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=204,h=192,fit=crop/mPoyZVg96EI62K0E/joel-filipe-unsplash-A83b6wlplpfyBgkr.jpg</item>
+    </string-array>
+</resources>
