@@ -17,4 +17,6 @@
         <item>"https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=204,h=192,fit=crop/mPoyZVg96EI62K0E/Mask-Group-YXNDZyOxqLuzkpxb.png"</item>
         <item>"https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=204,h=192,fit=crop/mPoyZVg96EI62K0E/joel-filipe-unsplash-A83b6wlplpfyBgkr.jpg</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

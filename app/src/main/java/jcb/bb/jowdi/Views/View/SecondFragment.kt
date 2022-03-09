@@ -3,6 +3,7 @@ package jcb.bb.jowdi.Views.View
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,22 +25,17 @@ import jcb.bb.jowdi.databinding.FragmentSecondBinding
 class SecondFragment : Fragment() {
 
     private var _binding: FragmentSecondBinding? = null
-
     private val binding get() = _binding!!
 
-    private lateinit var rview: RecyclerView
     private lateinit var frontrview: RecyclerView
 
     private lateinit var adapterx: Adapter
-    private var Adapter: ItemArrayAdapter? = null
 
     private lateinit var model: ViewModel
     private var datafav = ArrayList<ListDataModel>()
-
-    lateinit var back: ImageButton
-    lateinit var next: ImageButton
-
     lateinit var title: TextView
+
+    var bundle = Bundle()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,38 +50,23 @@ class SecondFragment : Fragment() {
     }
 
     private fun initialize(){
-        binding.linear1.visibility = View.VISIBLE
-        binding.linear2.visibility = View.GONE
-
-        back = binding.bck
-        next = binding.next
-
-        title = binding.text
         model = ViewModelProvider(this).get(ViewModel::class.java)
     }
 
     private fun btnclick() {
-        rview = binding.rview
-        rview.layoutManager = GridLayoutManager(
-            context, 2, GridLayoutManager.VERTICAL,
-            false
-        )
         binding.btn1.setOnClickListener {
-            binding.linear2.visibility = View.VISIBLE
-            binding.linear1.visibility = View.GONE
-            first()
+            bundle.putString("btn", "btn1")
+            findNavController().navigate(R.id.action_SecondFragment_to_ThirdFragment, bundle )
         }
 
         binding.btn2.setOnClickListener {
-            binding.linear2.visibility = View.VISIBLE
-            binding.linear1.visibility = View.GONE
-            second()
+            bundle.putString("btn", "btn2")
+            findNavController().navigate(R.id.action_SecondFragment_to_ThirdFragment, bundle )
         }
 
         binding.btn3.setOnClickListener {
-            binding.linear2.visibility = View.VISIBLE
-            binding.linear1.visibility = View.GONE
-            third()
+            bundle.putString("btn", "btn3")
+            findNavController().navigate(R.id.action_SecondFragment_to_ThirdFragment, bundle )
         }
     }
 
@@ -108,83 +90,6 @@ class SecondFragment : Fragment() {
             }
         })
     }
-
-    private fun first() {
-        next.visibility = View.VISIBLE
-        back.visibility = View.GONE
-        title.text = "First Year with YOU"
-
-        datafav.clear()
-        model.readAllData.observe(viewLifecycleOwner, { data ->
-            rview.visibility = View.VISIBLE
-            rview.alpha = 0f
-            rview.animate().setDuration(300).alpha(1f).withEndAction {
-                for (item in data) {
-                    if (item.category == "first") {
-                        datafav.add(item)
-                        Adapter = ItemArrayAdapter(datafav, requireContext())
-                        rview.adapter = Adapter
-                    }
-                }
-            }
-        })
-        next.setOnClickListener {
-            second()
-        }
-    }
-
-    private fun second() {
-
-        datafav.clear()
-
-        back.visibility = View.VISIBLE
-        back.setOnClickListener {
-            first()
-        }
-        title.text = "Second Year with YOU"
-        model.readAllData.observe(viewLifecycleOwner, { data ->
-            rview.visibility = View.VISIBLE
-            rview.alpha = 0f
-            rview.animate().setDuration(300).alpha(1f).withEndAction {
-                for (item in data) {
-                    if (item.category == "second") {
-                        datafav.add(item)
-                        Adapter = ItemArrayAdapter(datafav, requireContext())
-                        rview.adapter = Adapter
-                    }
-                }
-            }
-        })
-        next.setOnClickListener {
-            third()
-        }
-    }
-
-    private fun third() {
-        datafav.clear()
-
-        back.visibility = View.VISIBLE
-        back.setOnClickListener {
-            second()
-        }
-        title.text = "Third Year with YOU"
-
-        model.readAllData.observe(viewLifecycleOwner, { data ->
-            rview.visibility = View.VISIBLE
-            rview.alpha = 0f
-            rview.animate().setDuration(300).alpha(1f).withEndAction {
-                for (item in data) {
-                    if (item.category == "third") {
-                        datafav.add(item)
-                        Adapter = ItemArrayAdapter(datafav, requireContext())
-                        rview.adapter = Adapter
-                    }
-                }
-            }
-        })
-        next.visibility = View.GONE
-    }
-    
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
