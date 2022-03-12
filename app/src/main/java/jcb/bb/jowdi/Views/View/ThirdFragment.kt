@@ -57,7 +57,7 @@ class ThirdFragment : Fragment() {
         return binding.root
     }
 
-    private fun initialize(){
+    private fun initialize() {
         back = binding.bck
         next = binding.next
 
@@ -73,11 +73,17 @@ class ThirdFragment : Fragment() {
             context, 2, GridLayoutManager.VERTICAL,
             false
         )
-            when (fromSecond) {
-                "" -> {
-
-                }
+        when (fromSecond) {
+            "btn1" -> {
+                first()
             }
+            "btn2" -> {
+                second()
+            }
+            "btn3" -> {
+                third()
+            }
+        }
     }
 
     private fun first() {

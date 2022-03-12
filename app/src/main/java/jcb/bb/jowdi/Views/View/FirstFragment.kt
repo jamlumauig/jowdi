@@ -1,6 +1,7 @@
 package jcb.bb.jowdi.Views.View
 
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,12 +21,17 @@ class FirstFragment : Fragment() {
     var b = Bundle()
     private lateinit var result: EditText
 
+    lateinit var mediaSong : MediaPlayer
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        mediaSong = MediaPlayer.create(context, R.raw.hbd)
+        mediaSong.start()
+
         return binding.root
 
     }
@@ -54,6 +60,11 @@ class FirstFragment : Fragment() {
             }
 
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaSong.release()
     }
 
     override fun onDestroyView() {
