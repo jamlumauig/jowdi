@@ -2,6 +2,7 @@ package jcb.bb.jowdi.Views.View
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
+import android.media.MediaPlayer.create
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -21,7 +22,7 @@ class FirstFragment : Fragment() {
     var b = Bundle()
     private lateinit var result: EditText
 
-    lateinit var mediaSong : MediaPlayer
+    private lateinit var mediaSong : MediaPlayer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,13 +30,10 @@ class FirstFragment : Fragment() {
     ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
-        mediaSong = MediaPlayer.create(context, R.raw.hbd)
-        mediaSong.start()
-
+        mediaSong = create(this.requireContext(), R.raw.hbd)
         return binding.root
 
     }
-
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,9 +48,11 @@ class FirstFragment : Fragment() {
             ) {
                 binding.firstLayout.visibility = View.GONE
                 binding.secondLayout.visibility = View.VISIBLE
+                mediaSong.start()
 
                 binding.btn.setOnClickListener {
                     findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, b )
+                    mediaSong.stop()
                 }
             } else {
                 Toast.makeText(context, "DI KITA LAB HAHA\nPLEASE ENTER AGAIN", Toast.LENGTH_SHORT)
@@ -62,11 +62,9 @@ class FirstFragment : Fragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        mediaSong.release()
+     fun start(){
+        mediaSong.start()
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
