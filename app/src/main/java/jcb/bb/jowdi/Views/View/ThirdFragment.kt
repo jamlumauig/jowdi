@@ -29,9 +29,6 @@ class ThirdFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var rview: RecyclerView
-    private lateinit var frontrview: RecyclerView
-
-    private lateinit var adapterx: Adapter
     private var Adapter: ItemArrayAdapter? = null
 
     private lateinit var model: ViewModel
