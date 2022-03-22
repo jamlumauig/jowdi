@@ -160,7 +160,7 @@
                             android:numColumns="2">
 
                             <TextView
-                                android:id="@+id/adv"
+                                android:id="@+id/music"
                                 android:layout_width="170dp"
                                 android:layout_height="wrap_content"
                                 android:layout_row="0"
@@ -177,7 +177,7 @@
                                 app:drawableTopCompat="@drawable/music" />
 
                             <TextView
-                                android:id="@+id/dis"
+                                android:id="@+id/notes"
                                 android:layout_width="170dp"
                                 android:layout_height="wrap_content"
                                 android:clickable="true"

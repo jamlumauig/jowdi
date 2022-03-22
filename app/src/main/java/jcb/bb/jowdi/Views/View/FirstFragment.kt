@@ -62,11 +62,9 @@ class FirstFragment : Fragment() {
         }
     }
 
-     fun start(){
-        mediaSong.start()
-    }
     override fun onDestroyView() {
         super.onDestroyView()
+        mediaSong.stop()
         _binding = null
     }
 }

@@ -68,6 +68,15 @@ class SecondFragment : Fragment() {
             bundle.putString("btn", "btn3")
             findNavController().navigate(R.id.action_SecondFragment_to_ThirdFragment, bundle )
         }
+
+        binding.music.setOnClickListener {
+            bundle.putString("btn", "music")
+            findNavController().navigate(R.id.action_SecondFragment_to_FourthFragment, bundle )
+        }
+        binding.notes.setOnClickListener {
+            bundle.putString("btn", "notes")
+            findNavController().navigate(R.id.action_SecondFragment_to_FourthFragment, bundle )
+        }
     }
 
     private fun front() {

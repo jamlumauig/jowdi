@@ -36,7 +36,7 @@ class FourthFragment : Fragment() {
     private var datafav = ArrayList<ListDataModel>()
     lateinit var title: TextView
 
-    var bundle = Bundle()
+    var fromSecond: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,11 +46,14 @@ class FourthFragment : Fragment() {
         _binding = FragmentFourthBinding.inflate(inflater, container, false)
         initialize()
         btnclick()
+        fromSecond = arguments?.getString("btn")
+
         return binding.root
     }
 
     private fun initialize(){
         model = ViewModelProvider(this).get(ViewModel::class.java)
+
     }
 
     private fun btnclick() {
