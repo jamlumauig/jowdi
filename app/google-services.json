@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "675997223724",
+    "firebase_url": "https://jowdi-project-default-rtdb.firebaseio.com",
+    "project_id": "jowdi-project",
+    "storage_bucket": "jowdi-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675997223724:android:8cfa94dcf83d2741bf3a89",
+        "android_client_info": {
+          "package_name": "jcb.bb.jowdi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675997223724-v4qdimeqbd9sfjgr05atmd9uh3sckrv5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADgjAfnboRjZx5zwZ6iHx4pR8Bl5iUMpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675997223724-v4qdimeqbd9sfjgr05atmd9uh3sckrv5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
