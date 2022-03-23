@@ -17,6 +17,7 @@
         android:hardwareAccelerated="false"
         android:largeHeap="true"
         android:theme="@style/Theme.Jowdi">
+
         <activity
             android:name=".Views.View.MainActivity"
             android:exported="true"
@@ -31,6 +32,7 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>
