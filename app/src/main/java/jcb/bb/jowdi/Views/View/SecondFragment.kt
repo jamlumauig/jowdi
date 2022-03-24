@@ -75,7 +75,7 @@ class SecondFragment : Fragment() {
         }
         binding.notes.setOnClickListener {
             bundle.putString("btn", "notes")
-            findNavController().navigate(R.id.action_SecondFragment_to_FourthFragment, bundle )
+            findNavController().navigate(R.id.action_SecondFragment_to_NotesFragment, bundle )
         }
     }
 

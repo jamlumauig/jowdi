@@ -28,6 +28,10 @@
             android:id="@+id/action_SecondFragment_to_FourthFragment"
             app:destination="@id/FourthFragment" />
 
+        <action
+            android:id="@+id/action_SecondFragment_to_NotesFragment"
+            app:destination="@id/NotesFragment" />
+
     </fragment>
 
     <fragment
@@ -52,4 +56,17 @@
             android:id="@+id/action_FourthFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/NotesFragment"
+        android:name="jcb.bb.jowdi.Views.View.NotesFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_notes">
+
+        <action
+            android:id="@+id/action_NotesFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
+
+
 </navigation>
