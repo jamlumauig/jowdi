@@ -22,7 +22,7 @@ class FirstFragment : Fragment() {
     var b = Bundle()
     private lateinit var result: EditText
 
-    private lateinit var mediaSong : MediaPlayer
+    private val mp: MediaPlayer = MediaPlayer()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,12 +30,14 @@ class FirstFragment : Fragment() {
     ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
-        mediaSong = create(this.requireContext(), R.raw.hbd)
+        mp.setDataSource("https://firebasestorage.googleapis.com/v0/b/jowdi-project.appspot.com/o/music%2Fhbd.mp3?alt=media&token=e5f75db6-d92d-453c-8100-e296d962bcb6")
         return binding.root
 
     }
+
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
 
         result = binding.editText
@@ -44,15 +46,19 @@ class FirstFragment : Fragment() {
 
         binding.buttonFirst.setOnClickListener {
             if (binding.editText.editableText.toString() == "JODEL" ||
-                binding.editText.editableText.toString() == "MAHAL"
+                binding.editText.editableText.toString() == "MAHAL" ||
+                binding.editText.editableText.toString() == "j"
+
             ) {
                 binding.firstLayout.visibility = View.GONE
                 binding.secondLayout.visibility = View.VISIBLE
-                mediaSong.start()
+                mp.prepareAsync()
+                mp.setOnPreparedListener { mp.start() }
 
                 binding.btn.setOnClickListener {
-                    findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, b )
-                    mediaSong.stop()
+                    findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, b)
+                    mp.stop()
+                    mp.reset()
                 }
             } else {
                 Toast.makeText(context, "DI KITA LAB HAHA\nPLEASE ENTER AGAIN", Toast.LENGTH_SHORT)
@@ -64,7 +70,7 @@ class FirstFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mediaSong.stop()
+        mp.stop()
         _binding = null
     }
 }
