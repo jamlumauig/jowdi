@@ -56,11 +56,11 @@ class NotesAdapter(var mainlist: ArrayList<String>, var ideaClick: AdapterOnClic
     }
 
     override fun getCount(): Int {
-        TODO("Not yet implemented")
+        return mainlist.size
     }
 
     override fun getItem(p0: Int): Any {
-        TODO("Not yet implemented")
+        return mainlist.size
     }
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {

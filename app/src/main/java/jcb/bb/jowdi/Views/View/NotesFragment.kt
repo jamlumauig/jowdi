@@ -37,6 +37,11 @@ class NotesFragment : Fragment(), AdapterOnClick {
     var set: String = String()
     var idName: Int = 0
 
+
+    val sharedPreferences = getApplicationContext<Context>().getSharedPreferences(
+        "jcb.bb.jowdi",
+        Context.MODE_PRIVATE)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,6 +52,8 @@ class NotesFragment : Fragment(), AdapterOnClick {
         listView = binding.listView
 
         firstactivity()
+        retrieve()
+        add()
         return binding.root
     }
 
@@ -61,25 +68,19 @@ class NotesFragment : Fragment(), AdapterOnClick {
     }
 
     fun dialog() {
-        val listView: ListView = binding.listView
-        val sharedPreferences = getApplicationContext<Context>().getSharedPreferences(
-            "jowdi",
-            Context.MODE_PRIVATE
-        )
-        val set = sharedPreferences.getStringSet("notes", null) as HashSet<String>?
+        set = (sharedPreferences.getStringSet("notes", null) as HashSet<String>?).toString()
 
-        if (set == null) {
-            notes.add("Example note")
-        } else {
-            notes = ArrayList(set)
+      //  notes = value.
+        for (value in set) {
+            arrayAdapter = NotesAdapter(notes, this)
+            listView.adapter = arrayAdapter
         }
-
         // Using custom listView Provided by Android Studio
 
         // Using custom listView Provided by Android Studio
-        arrayAdapter = NotesAdapter(notes, this)
+        /*arrayAdapter = NotesAdapter(notes, this)
 
-        listView.adapter = arrayAdapter
+        listView.adapter = arrayAdapter*/
 
         /*  listView.onItemLongClickListener =
               OnItemLongClickListener { _, _, i, _ ->
@@ -109,16 +110,13 @@ class NotesFragment : Fragment(), AdapterOnClick {
 
     fun add() {
         val editor: SharedPreferences.Editor =
-            requireActivity().getSharedPreferences("jowdi", Context.MODE_PRIVATE).edit()
+            requireActivity().getSharedPreferences("jcb.bb.jowdi", Context.MODE_PRIVATE).edit()
         editor.putString("name", "jowdi")
         editor.putInt("ID", 1)
         editor.apply()
     }
 
     fun retrieve() {
-        val sharedPreferences: SharedPreferences =
-            requireActivity().getSharedPreferences("jowdi", Context.MODE_PRIVATE)
-
         set = sharedPreferences.getString("name", "No name defined").toString()
 
         idName = sharedPreferences.getInt("idName", 0)
@@ -182,7 +180,7 @@ class NotesFragment : Fragment(), AdapterOnClick {
                 notes[noteID] = charSequence.toString()
                 arrayAdapter.notifyDataSetChanged()
                 val sharedPreferences = getApplicationContext<Context>().getSharedPreferences(
-                    "jowdi",
+                    "jcb.bb.jowdi",
                     Context.MODE_PRIVATE
                 )
                 val set: HashSet<String> = HashSet(notes)
