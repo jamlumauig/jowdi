@@ -55,8 +55,6 @@ class FourthFragment : Fragment(), AdapterOnClick {
 
         _binding = FragmentFourthBinding.inflate(inflater, container, false)
         initialize()
-        btnclick()
-        fromSecond = arguments?.getString("btn")
 
         return binding.root
     }
@@ -73,6 +71,14 @@ class FourthFragment : Fragment(), AdapterOnClick {
             context, LinearLayoutManager.VERTICAL,
             false
         )
+
+        binding.back.setOnClickListener{
+            music.visibility = View.GONE
+            linear2.visibility = View.VISIBLE
+            mp.stop()
+            mp.reset()
+        }
+
         run()
     }
 
@@ -93,13 +99,6 @@ class FourthFragment : Fragment(), AdapterOnClick {
         })
     }
 
-    private fun btnclick() {
-        when (fromSecond) {
-            "music" -> {
-
-            }
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -124,7 +123,7 @@ class FourthFragment : Fragment(), AdapterOnClick {
         }, 0)
     }
 
-    private fun setSong(){
+    private fun setSong() {
         try {
 
             seek.setOnSeekBarChangeListener(object :
@@ -147,6 +146,7 @@ class FourthFragment : Fragment(), AdapterOnClick {
             e.printStackTrace()
         }
     }
+
     override fun onAdapterClick(positon: Int) {
         var position = positon
         SongTitle = datafav[position].desc
@@ -168,10 +168,10 @@ class FourthFragment : Fragment(), AdapterOnClick {
             seek.max = mp.duration
             if (mp.isPlaying) {
                 mp.pause()
-                binding.play.setImageResource(R.drawable.pause)
+                binding.play.setImageResource(R.drawable.play)
             } else {
                 mp.start()
-                binding.play.setImageResource(R.drawable.play)
+                binding.play.setImageResource(R.drawable.pause)
             }
         }
 
@@ -179,15 +179,12 @@ class FourthFragment : Fragment(), AdapterOnClick {
             music.visibility = View.VISIBLE
             linear2.visibility = View.GONE
 
-            if (mp.isPlaying) {
-                mp.stop()
-                mp.reset()
-            }
-
             if (++position >= datafav.size) {
                 position = 0
             } else
                 try {
+                    mp.stop()
+                    mp.reset()
                     SongTitle = datafav[position].desc
                     SongLink = datafav[position].image
                     binding.title.text = SongTitle
@@ -196,6 +193,7 @@ class FourthFragment : Fragment(), AdapterOnClick {
                     mp.setOnPreparedListener {
                         initializeseek()
                         mp.start()
+                        binding.play.setImageResource(R.drawable.pause)
                     }
 
                     Log.e("SongLink", SongLink)
@@ -209,15 +207,12 @@ class FourthFragment : Fragment(), AdapterOnClick {
             music.visibility = View.VISIBLE
             linear2.visibility = View.GONE
 
-            if (mp.isPlaying) {
-                mp.stop()
-                mp.reset()
-            }
-
             if (--position >= datafav.size) {
                 position = 0
             } else
                 try {
+                    mp.stop()
+                    mp.reset()
                     SongTitle = datafav[position].desc
                     SongLink = datafav[position].image
                     binding.title.text = SongTitle
@@ -226,6 +221,7 @@ class FourthFragment : Fragment(), AdapterOnClick {
                     mp.setOnPreparedListener {
                         initializeseek()
                         mp.start()
+                        binding.play.setImageResource(R.drawable.pause)
                     }
 
                     Log.e("SongLink", SongLink)

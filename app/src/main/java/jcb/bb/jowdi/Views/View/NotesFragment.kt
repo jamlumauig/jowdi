@@ -9,24 +9,14 @@ import jcb.bb.jowdi.databinding.FragmentNotesBinding
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 
 import android.content.SharedPreferences
-
-import android.R
 import android.app.AlertDialog
 import android.content.Context
 import android.widget.ListView
-import androidx.test.core.app.ApplicationProvider
 import android.widget.ArrayAdapter
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 
-import android.content.Intent
-
-import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
-
-import android.content.DialogInterface
 import android.widget.AdapterView.OnItemLongClickListener
-
+import jcb.bb.jowdi.R
 
 class NotesFragment : Fragment() {
 
@@ -47,6 +37,7 @@ class NotesFragment : Fragment() {
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
         AddNote()
         initialize()
+
         return binding.root
     }
 
@@ -64,7 +55,7 @@ class NotesFragment : Fragment() {
                 ArrayList(set) // to bring all the already stored data in the set to the notes ArrayList
         }
 
-        arrayAdapter = ArrayAdapter(requireContext(), R.layout.simple_list_item_1, notes)
+        arrayAdapter = ArrayAdapter(requireContext(), R.layout.fragment_notes, notes)
         listView.adapter = arrayAdapter
 
         listView.onItemClickListener =
@@ -77,21 +68,21 @@ class NotesFragment : Fragment() {
         listView.onItemLongClickListener =
             OnItemLongClickListener { parent, view, position, id ->
                 AlertDialog.Builder(context) // we can't use getApplicationContext() here as we want the activity to be the context, not the application
-                    .setIcon(R.drawable.ic_dialog_alert)
+                    .setIcon(R.drawable.ic_baseline_stop_24)
                     .setTitle("Delete?")
                     .setMessage("Are you sure you want to delete this note?")
-                    .setPositiveButton("Yes",
-                        DialogInterface.OnClickListener { dialog, which ->
-                            // to remove the selected note once "Yes" is pressed
-                            notes.removeAt(position)
-                            arrayAdapter!!.notifyDataSetChanged()
-                            val sharedPreferences =
-                                getApplicationContext<Context>().getSharedPreferences(
-                                    "jcb.bb.jowdi",
-                                    Context.MODE_PRIVATE
-                                )
-                            sharedPreferences.edit().putStringSet("notes", set).apply()
-                        })
+                    .setPositiveButton("Yes"
+                    ) { _, _ ->
+                        // to remove the selected note once "Yes" is pressed
+                        notes.removeAt(position)
+                        arrayAdapter!!.notifyDataSetChanged()
+                        val sharedPreferences =
+                            getApplicationContext<Context>().getSharedPreferences(
+                                "jcb.bb.jowdi",
+                                Context.MODE_PRIVATE
+                            )
+                        sharedPreferences.edit().putStringSet("notes", set).apply()
+                    }
                     .setNegativeButton("No", null)
                     .show()
                 true // this was initially false but we change it to true as if false, the method assumes that we want to do a short click after the long click as well
@@ -104,5 +95,6 @@ class NotesFragment : Fragment() {
             binding.firstLayout.visibility = View.GONE
         }
     }
+
 
 }
