@@ -31,7 +31,6 @@ class FourthFragment : Fragment(), AdapterOnClick {
     private val binding get() = _binding!!
 
     private lateinit var rview: RecyclerView
-
     private lateinit var adapterx: MusicAdapter
 
     private lateinit var model: ViewModel

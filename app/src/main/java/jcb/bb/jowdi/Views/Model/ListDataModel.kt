@@ -12,4 +12,5 @@ data class ListDataModel(
     val category: String,
     val image: String
 ) {
+
 }

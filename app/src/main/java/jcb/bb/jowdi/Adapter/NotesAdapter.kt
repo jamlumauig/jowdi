@@ -1,28 +1,27 @@
 package jcb.bb.jowdi.Adapter
 
-import android.database.DataSetObserver
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import jcb.bb.jowdi.R
+import jcb.bb.jowdi.Views.Model.ListDataModel
 import jcb.bb.jowdi.databinding.MusicBinding
 
 
-class NotesAdapter(var mainlist: ArrayList<String>, var ideaClick: AdapterOnClick) :
-    RecyclerView.Adapter<NotesAdapter.ViewHolder>(), ListAdapter {
+class NotesAdapter(var mainlist: ArrayList<ListDataModel>, var ideaClick: AdapterOnClick) :
+    RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
     class ViewHolder(binding: MusicBinding, var clickData: AdapterOnClick) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         var bindings: MusicBinding = binding
-        fun bindIdea(dataPor: String) {
+        fun bindIdea(dataPor: ListDataModel) {
 
             itemView.setOnClickListener(this)
             itemView.apply {
 
-                bindings.title.text = dataPor
+                bindings.title.text = dataPor.desc
             }
         }
 
@@ -35,7 +34,7 @@ class NotesAdapter(var mainlist: ArrayList<String>, var ideaClick: AdapterOnClic
         ViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.notesss, parent, false
+                R.layout.music, parent, false
             ), ideaClick
         )
 
@@ -46,40 +45,5 @@ class NotesAdapter(var mainlist: ArrayList<String>, var ideaClick: AdapterOnClic
     override fun getItemCount(): Int {
         return mainlist.size
     }
-
-    override fun registerDataSetObserver(p0: DataSetObserver?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun unregisterDataSetObserver(p0: DataSetObserver?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getCount(): Int {
-        return mainlist.size
-    }
-
-    override fun getItem(p0: Int): Any {
-        return mainlist.size
-    }
-
-    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        TODO("Not yet implemented")
-    }
-
-    override fun getViewTypeCount(): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun isEmpty(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun areAllItemsEnabled(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isEnabled(p0: Int): Boolean {
-        TODO("Not yet implemented")
-    }
 }
+

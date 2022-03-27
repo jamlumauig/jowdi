@@ -12,6 +12,7 @@
             android:id="@+id/firstLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <Button
@@ -21,12 +22,10 @@
                 android:layout_marginBottom="40dp"
                 android:text="ADD NOTE" />
 
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listView"
-                android:layout_width="409dp"
-                android:layout_height="729dp"
-                tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="1dp" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
@@ -34,15 +33,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="20dp"
-            android:background="@drawable/yellow"
             android:orientation="vertical"
-            android:visibility="gone"
             android:padding="5dp">
-
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="NOTES"
+                android:textSize="30sp"
+                android:layout_marginBottom="20dp"/>
+
+            <EditText
+                android:id="@+id/desc"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:background="@drawable/yellow"
                 android:ems="10"
                 android:fontFamily="@font/finger_paint"
                 android:gravity="start|top"
@@ -55,9 +60,14 @@
                 android:text="First Reason"
                 android:textColor="#332727"
                 android:textSize="17sp"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="101dp"
-                tools:layout_editor_absoluteY="316d" />
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/save"
+                android:layout_marginTop="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="save"/>
 
         </LinearLayout>
     </LinearLayout>
