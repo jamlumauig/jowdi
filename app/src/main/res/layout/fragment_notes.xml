@@ -12,7 +12,6 @@
             android:id="@+id/firstLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:orientation="vertical">
 
             <Button
@@ -34,6 +33,7 @@
             android:layout_height="match_parent"
             android:layout_margin="20dp"
             android:orientation="vertical"
+            android:visibility="gone"
             android:padding="5dp">
             <EditText
                 android:id="@+id/title"
@@ -46,7 +46,7 @@
             <EditText
                 android:id="@+id/desc"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="200dp"
                 android:background="@drawable/yellow"
                 android:ems="10"
                 android:fontFamily="@font/finger_paint"

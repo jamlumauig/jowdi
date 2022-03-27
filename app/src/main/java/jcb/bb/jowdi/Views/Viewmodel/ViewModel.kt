@@ -10,14 +10,13 @@ import jcb.bb.jowdi.Views.Model.ListDataModel
 class ViewModel(application: Application) : AndroidViewModel(application) {
 
     val readAllData: LiveData<List<ListDataModel>>
-    val saveData : LiveData<List<ListDataModel>>
+    var insertdata: LiveData<List<ListDataModel>>
     private val repository: UserRepository
 
     init {
         val userDao = UserDb.getDatabase(application).userDao()
         repository = UserRepository(userDao)
         readAllData = repository.getAlldata
-        saveData = repository.getAlldata
-
+        insertdata = repository.insertData
     }
 }

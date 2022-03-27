@@ -5,18 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import jcb.bb.jowdi.databinding.FragmentNotesBinding
 
-import android.widget.ListView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 import jcb.bb.jowdi.Adapter.AdapterOnClick
 import jcb.bb.jowdi.Adapter.NotesAdapter
 import jcb.bb.jowdi.Views.Model.ListDataModel
 import jcb.bb.jowdi.Views.Viewmodel.ViewModel
+import jcb.bb.jowdi.database.UserDb
 
 class NotesFragment : Fragment(), AdapterOnClick {
 
@@ -42,13 +42,13 @@ class NotesFragment : Fragment(), AdapterOnClick {
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
         initialize()
         firstactivity()
-        retrieve()
-        add()
+
         return binding.root
     }
 
 
     private fun initialize() {
+        model = ViewModelProvider(this).get(ViewModel::class.java)
         rview = binding.listView
         title = binding.title
         desc = binding.desc
@@ -82,6 +82,9 @@ class NotesFragment : Fragment(), AdapterOnClick {
 
             binding.save.setOnClickListener{
                 add()
+                Toast.makeText(context,"Saved!",Toast.LENGTH_SHORT).show()
+                binding.firstLayout.visibility = View.VISIBLE
+                binding.secondLayout.visibility = View.GONE
             }
         }
 
@@ -92,8 +95,24 @@ class NotesFragment : Fragment(), AdapterOnClick {
     }
 
     fun add() {
-        titleText = binding.title.editableText.toString()
-        descText = binding.desc.editableText.toString()
+        titleText = binding.title.editableText.toString().trim()
+        descText = binding.desc.editableText.toString().trim()
+
+
+        model.insertdata.observe(viewLifecycleOwner, { data ->
+            rview.visibility = View.VISIBLE
+            rview.alpha = 0f
+            rview.animate().setDuration(300).alpha(1f).withEndAction {
+                for (item in data) {
+                        //val adds = ListDataModel(0, titleText, descText, "notes", "")
+                        item.title = titleText
+                        item.desc = descText
+                        item.category = "notes"
+
+                }
+            }
+        })
+
     }
 
     fun retrieve() {

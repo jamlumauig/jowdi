@@ -5,12 +5,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "datamodels")
 data class ListDataModel(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val title: String,
-    val desc: String,
-    val category: String,
-    val image: String
+    @PrimaryKey(autoGenerate = true)  var id: Int,
+    var title: String,
+    var desc: String,
+    var category: String,
+    var image: String
 ) {
 
 }

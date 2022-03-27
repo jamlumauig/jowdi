@@ -11,7 +11,7 @@ interface UserDao {
 
     // insert
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(data: LiveData<List<ListDataModel>>)
+    fun insert(data : LiveData<List<ListDataModel>>): LiveData<List<ListDataModel>>
 
     // select ID
     @Query("select * from datamodels where id=:id")
