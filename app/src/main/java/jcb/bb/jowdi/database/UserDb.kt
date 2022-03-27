@@ -12,7 +12,7 @@ abstract class UserDb : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: UserDb? = null
+         var INSTANCE: UserDb? = null
 
         fun getDatabase(context: Context): UserDb {
             val tempInstance = INSTANCE
@@ -25,13 +25,12 @@ abstract class UserDb : RoomDatabase() {
                     UserDb::class.java,
                     "datamodel.db"
                 ).createFromAsset("databases/datamodel.db")
-                    .build()
+                    .allowMainThreadQueries().build()
                 INSTANCE = instance
                 return instance
             }
         }
-
-
+//my data base
 
     }
 

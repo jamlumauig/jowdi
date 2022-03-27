@@ -9,15 +9,24 @@ interface UserDao {
     @Query("SELECT * FROM datamodels")
     fun getAllData(): LiveData<List<ListDataModel>>
 
-    // insert
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(data : LiveData<List<ListDataModel>>): LiveData<List<ListDataModel>>
-
-    // select ID
     @Query("select * from datamodels where id=:id")
     fun fetchData(id:Int):ListDataModel
 
     @Delete
     fun deleteData(data:ListDataModel):Int
+
+
+    @Query("SELECT * FROM datamodels")
+    fun getAll(): List<ListDataModel>
+
+    @Query("SELECT * FROM datamodels WHERE id IN (:userIds)")
+    fun loadAllByIds(userIds: IntArray): List<ListDataModel>
+
+    @Insert
+    fun insertAll(vararg users: ListDataModel)
+
+    @Delete
+    fun delete(user: ListDataModel)
+
 
 }

@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import jcb.bb.jowdi.databinding.FragmentNotesBinding
 
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +19,7 @@ import jcb.bb.jowdi.Adapter.AdapterOnClick
 import jcb.bb.jowdi.Adapter.NotesAdapter
 import jcb.bb.jowdi.Views.Model.ListDataModel
 import jcb.bb.jowdi.Views.Viewmodel.ViewModel
+import jcb.bb.jowdi.database.UserDao
 import jcb.bb.jowdi.database.UserDb
 
 class NotesFragment : Fragment(), AdapterOnClick {
@@ -50,6 +54,10 @@ class NotesFragment : Fragment(), AdapterOnClick {
     private fun initialize() {
         model = ViewModelProvider(this).get(ViewModel::class.java)
         rview = binding.listView
+        rview.layoutManager = LinearLayoutManager(
+            context,  LinearLayoutManager.VERTICAL,
+            false
+        )
         title = binding.title
         desc = binding.desc
 
@@ -85,6 +93,7 @@ class NotesFragment : Fragment(), AdapterOnClick {
                 Toast.makeText(context,"Saved!",Toast.LENGTH_SHORT).show()
                 binding.firstLayout.visibility = View.VISIBLE
                 binding.secondLayout.visibility = View.GONE
+
             }
         }
 
@@ -97,22 +106,10 @@ class NotesFragment : Fragment(), AdapterOnClick {
     fun add() {
         titleText = binding.title.editableText.toString().trim()
         descText = binding.desc.editableText.toString().trim()
-
-
-        model.insertdata.observe(viewLifecycleOwner, { data ->
-            rview.visibility = View.VISIBLE
-            rview.alpha = 0f
-            rview.animate().setDuration(300).alpha(1f).withEndAction {
-                for (item in data) {
-                        //val adds = ListDataModel(0, titleText, descText, "notes", "")
-                        item.title = titleText
-                        item.desc = descText
-                        item.category = "notes"
-
-                }
-            }
-        })
-
+        var id  = 60
+        val adds = ListDataModel(id, titleText, descText, "notes", "")
+        UserDb.INSTANCE?.userDao()?.insertAll(adds)
+       id++
     }
 
     fun retrieve() {

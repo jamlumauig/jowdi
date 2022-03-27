@@ -6,6 +6,5 @@ import jcb.bb.jowdi.database.UserDao
 
 class UserRepository(userDao: UserDao) {
     val getAlldata: LiveData<List<ListDataModel>> = userDao.getAllData()
-    val insertData: Unit = userDao.insert(LiveData<List<ListDataModel>>)
 
 }
