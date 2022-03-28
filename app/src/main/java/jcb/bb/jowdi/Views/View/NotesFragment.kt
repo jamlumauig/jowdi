@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import jcb.bb.jowdi.databinding.FragmentNotesBinding
 
@@ -19,8 +17,6 @@ import jcb.bb.jowdi.Adapter.AdapterOnClick
 import jcb.bb.jowdi.Adapter.NotesAdapter
 import jcb.bb.jowdi.Views.Model.ListDataModel
 import jcb.bb.jowdi.Views.Viewmodel.ViewModel
-import jcb.bb.jowdi.database.UserDao
-import jcb.bb.jowdi.database.UserDb
 
 class NotesFragment : Fragment(), AdapterOnClick {
 
@@ -106,10 +102,34 @@ class NotesFragment : Fragment(), AdapterOnClick {
     fun add() {
         titleText = binding.title.editableText.toString().trim()
         descText = binding.desc.editableText.toString().trim()
-        var id  = 60
-        val adds = ListDataModel(id, titleText, descText, "notes", "")
-        UserDb.INSTANCE?.userDao()?.insertAll(adds)
-       id++
+        model.readAllData.observe(viewLifecycleOwner, {
+            val db = OffDB(requireContext())
+            val long = db.addNotes(ListDataModel(null, titleText, descText, "notes", " "))
+            if (long > -1) {
+                Toast.makeText(context, "Saved to favorites!", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "Not Saved to favorites!", Toast.LENGTH_LONG).show()
+            }
+        })
+       /* model.readAllData.observe(viewLifecycleOwner, { data ->
+            for (item in data) {
+                var index = 61
+
+                val favId = Array(data.size){"0"}
+
+                favId[index] = item.id.toString()
+                datafav.add(item)
+
+                val adds =
+                    ListDataModel(Integer.parseInt(favId[index]), titleText, descText, "notes", "")
+                //UserDb.INSTANCE?.userDao()?.insertAll(adds)
+                datafav.add(adds)
+                datafav
+
+                index++
+
+            }
+        })*/
     }
 
     fun retrieve() {

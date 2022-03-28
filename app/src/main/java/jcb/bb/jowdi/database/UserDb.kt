@@ -1,5 +1,6 @@
 package jcb.bb.jowdi.database
 
+import android.content.ContentValues
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -9,7 +10,6 @@ import jcb.bb.jowdi.Views.Model.ListDataModel
 @Database(entities = [ListDataModel::class], version = 1, exportSchema = false)
 abstract class UserDb : RoomDatabase() {
     abstract fun userDao(): UserDao
-
     companion object {
         @Volatile
          var INSTANCE: UserDb? = null
@@ -30,8 +30,6 @@ abstract class UserDb : RoomDatabase() {
                 return instance
             }
         }
-//my data base
-
     }
 
 
