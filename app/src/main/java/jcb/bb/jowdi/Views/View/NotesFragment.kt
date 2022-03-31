@@ -85,7 +85,7 @@ class NotesFragment : Fragment(), AdapterOnClick {
             binding.secondLayout.visibility = View.VISIBLE
 
             binding.save.setOnClickListener{
-                add()
+                //add()
                 Toast.makeText(context,"Saved!",Toast.LENGTH_SHORT).show()
                 binding.firstLayout.visibility = View.VISIBLE
                 binding.secondLayout.visibility = View.GONE
@@ -98,12 +98,11 @@ class NotesFragment : Fragment(), AdapterOnClick {
     fun delete() {
 
     }
-
+/*
     fun add() {
         titleText = binding.title.editableText.toString().trim()
         descText = binding.desc.editableText.toString().trim()
         model.readAllData.observe(viewLifecycleOwner, {
-            val db = OffDB(requireContext())
             val long = db.addNotes(ListDataModel(null, titleText, descText, "notes", " "))
             if (long > -1) {
                 Toast.makeText(context, "Saved to favorites!", Toast.LENGTH_LONG).show()
@@ -111,7 +110,7 @@ class NotesFragment : Fragment(), AdapterOnClick {
                 Toast.makeText(context, "Not Saved to favorites!", Toast.LENGTH_LONG).show()
             }
         })
-       /* model.readAllData.observe(viewLifecycleOwner, { data ->
+       *//* model.readAllData.observe(viewLifecycleOwner, { data ->
             for (item in data) {
                 var index = 61
 
@@ -129,8 +128,8 @@ class NotesFragment : Fragment(), AdapterOnClick {
                 index++
 
             }
-        })*/
-    }
+        })*//*
+    }*/
 
     fun retrieve() {
 
