@@ -14,19 +14,20 @@ interface UserDao {
 
     @Delete
     fun deleteData(data:ListDataModel):Int
-
-
+    
     @Query("SELECT * FROM datamodels")
     fun getAll(): List<ListDataModel>
 
     @Query("SELECT * FROM datamodels WHERE id IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<ListDataModel>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg users: ListDataModel)
 
     @Delete
     fun delete(user: ListDataModel)
+
+
 
 
 }

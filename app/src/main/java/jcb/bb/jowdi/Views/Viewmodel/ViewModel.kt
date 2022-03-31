@@ -9,6 +9,17 @@ import jcb.bb.jowdi.Views.Model.ListDataModel
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
 
+    fun addNote(title: String, desc: String) {
+        val param = ListDataModel(
+            id = null,
+            title = title,
+            desc = desc,
+            image = "",
+            category = "notes"
+        )
+        repository.insertNote(param)
+    }
+
     val readAllData: LiveData<List<ListDataModel>>
     private val repository: UserRepository
 
