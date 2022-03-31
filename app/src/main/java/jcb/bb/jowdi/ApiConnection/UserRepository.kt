@@ -9,4 +9,8 @@ class UserRepository(private val userDao: UserDao) {
 
     fun insertNote(note: ListDataModel) = userDao.insertAll(note)
 
+     fun getNoteById(id: Int): ListDataModel= userDao.fetchData(id)
+
+     fun deleteNote(note: ListDataModel)= userDao.delete(note)
+
 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import jcb.bb.jowdi.Adapter.AdapterOnClick
 import jcb.bb.jowdi.Adapter.NotesAdapter
+import jcb.bb.jowdi.ApiConnection.UserRepository
 import jcb.bb.jowdi.Views.Model.ListDataModel
 import jcb.bb.jowdi.Views.Viewmodel.ViewModel
 
@@ -101,12 +102,12 @@ class NotesFragment : Fragment(), AdapterOnClick {
     }
 
     fun add(){
-        datafav.clear()
-        model.addNote(
-            binding.title.text.toString(),
-            binding.desc.text.toString()
-        )
+       datafav.clear()
+        val adds = ListDataModel(null, binding.title.text.toString(), binding.desc.text.toString(), "notes", "")
+        model.addContacts(adds)
     }
+
+
 
 //    fun add() {
 //        titleText = binding.title.editableText.toString().trim()
@@ -139,6 +140,9 @@ class NotesFragment : Fragment(), AdapterOnClick {
 //            }
 //        })
 //    }
+
+
+
 
     fun retrieve() {
 

@@ -13,3 +13,4 @@ data class ListDataModel(
 ) {
 
 }
+class InvalidNoteException(message: String): Exception(message)
