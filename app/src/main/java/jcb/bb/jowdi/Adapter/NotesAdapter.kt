@@ -3,6 +3,7 @@ package jcb.bb.jowdi.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import jcb.bb.jowdi.R
@@ -19,15 +20,14 @@ class NotesAdapter(var mainlist: ArrayList<ListDataModel>, var ideaClick: Adapte
         var bindings: NotesssBinding = binding
         fun bindIdea(dataPor: ListDataModel) {
 
-            itemView.setOnClickListener(this)
+            //itemView.setOnClickListener(this)
             itemView.apply {
-
                 bindings.title.text = dataPor.title
             }
         }
 
         override fun onClick(v: View?) {
-            clickData.onAdapterClick(adapterPosition)
+            //clickData.onAdapterClick(adapterPosition)
         }
     }
 
@@ -41,10 +41,20 @@ class NotesAdapter(var mainlist: ArrayList<ListDataModel>, var ideaClick: Adapte
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindIdea(mainlist[position])
+
+        holder.bindings.edit.setOnClickListener {
+            holder.clickData.onAdapterClick(position,"edit" )
+        }
+        holder.bindings.delete.setOnClickListener {
+            holder.clickData.onAdapterClick(position ,"delete")
+        }
     }
 
     override fun getItemCount(): Int {
         return mainlist.size
     }
 }
+
+
+
 

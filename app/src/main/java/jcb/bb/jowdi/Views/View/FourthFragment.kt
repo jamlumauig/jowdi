@@ -146,7 +146,7 @@ class FourthFragment : Fragment(), AdapterOnClick {
         }
     }
 
-    override fun onAdapterClick(positon: Int) {
+    override fun onAdapterClick(positon: Int, name: String) {
         var position = positon
         SongTitle = datafav[position].desc
         SongLink = datafav[position].image

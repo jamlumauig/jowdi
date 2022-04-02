@@ -1,11 +1,14 @@
 package jcb.bb.jowdi.Views.Viewmodel
 
 import android.app.Application
+import android.content.ContentValues
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import jcb.bb.jowdi.database.UserDb
 import jcb.bb.jowdi.ApiConnection.UserRepository
 import jcb.bb.jowdi.Views.Model.ListDataModel
+import kotlinx.coroutines.launch
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -31,6 +34,21 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         )
         repository.insertNote(param)
     }
+
+    fun updateNote(id: Int, title: String, desc: String) {
+        val param = ListDataModel(
+            id = id,
+            title = title,
+            desc = desc,
+            image = "",
+            category = "notes"
+        )
+        repository.insertNote(param)
+    }
+
+    fun delete(id: Int){
+        repository.delete(id)
+    }
     operator fun invoke(note: ListDataModel) {
         repository.deleteNote(note)
     }
@@ -38,12 +56,4 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return repository.getNoteById(id)
     }
 
-    fun addContacts(note: ListDataModel) {
-        note.id = null
-        note.title = title
-        note.desc = desc
-        note.category = "notes"
-        note.image = ""
-        repository.insertNote(note)
-    }
 }

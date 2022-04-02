@@ -1,5 +1,6 @@
 package jcb.bb.jowdi.database
 
+import android.content.ContentValues
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import jcb.bb.jowdi.Views.Model.ListDataModel
@@ -27,7 +28,8 @@ interface UserDao {
     @Delete
     fun delete(user: ListDataModel)
 
-
+    @Query("DELETE FROM datamodels WHERE id = :id")
+    fun deleteById(id: Int)
 
 
 }

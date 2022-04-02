@@ -1,5 +1,7 @@
 package jcb.bb.jowdi.Views.View
 
+import android.R
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +20,10 @@ import jcb.bb.jowdi.Adapter.NotesAdapter
 import jcb.bb.jowdi.ApiConnection.UserRepository
 import jcb.bb.jowdi.Views.Model.ListDataModel
 import jcb.bb.jowdi.Views.Viewmodel.ViewModel
+import android.content.DialogInterface
+
+
+
 
 class NotesFragment : Fragment(), AdapterOnClick {
 
@@ -34,6 +40,9 @@ class NotesFragment : Fragment(), AdapterOnClick {
 
     lateinit var titleText :String
     lateinit var descText :String
+
+    lateinit var value1 :String
+    lateinit var value2 :String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,10 +76,13 @@ class NotesFragment : Fragment(), AdapterOnClick {
             rview.alpha = 0f
             rview.animate().setDuration(300).alpha(1f).withEndAction {
                 for (item in data) {
-                    if (item.category == "notes") {
-                        datafav.add(item)
-                        arrayAdapter = NotesAdapter(datafav, this)
-                        rview.adapter = arrayAdapter
+                        if (item.category == "notes") {
+                                datafav.add(item)
+                            if (datafav.isEmpty()) {
+                                Toast.makeText(context, "no record!", Toast.LENGTH_SHORT).show()
+                            }
+                                arrayAdapter = NotesAdapter(datafav, this)
+                                rview.adapter = arrayAdapter
                     }
                 }
             }
@@ -79,6 +91,7 @@ class NotesFragment : Fragment(), AdapterOnClick {
 
 
     fun firstactivity() {
+
         getAllData()
 
         binding.addNote.setOnClickListener {
@@ -96,60 +109,54 @@ class NotesFragment : Fragment(), AdapterOnClick {
         }
 
     }
-
-    fun delete() {
-
-    }
-
     fun add(){
-       datafav.clear()
-        val adds = ListDataModel(null, binding.title.text.toString(), binding.desc.text.toString(), "notes", "")
-        model.addContacts(adds)
+        datafav.clear()
+        model.addNote(binding.title.text.toString(), binding.desc.text.toString())
     }
 
+    override fun onAdapterClick(positon: Int, name: String) {
+        if (name == "edit"){
+        binding.firstLayout.visibility = View.GONE
+        binding.secondLayout.visibility = View.VISIBLE
 
+        value1 = datafav[positon].title
+        value2 = datafav[positon].desc
 
-//    fun add() {
-//        titleText = binding.title.editableText.toString().trim()
-//        descText = binding.desc.editableText.toString().trim()
-//        model.readAllData.observe(viewLifecycleOwner, {
-//            val long = db.addNotes(ListDataModel(null, titleText, descText, "notes", " "))
-//            if (long > -1) {
-//                Toast.makeText(context, "Saved to favorites!", Toast.LENGTH_LONG).show()
-//            } else {
-//                Toast.makeText(context, "Not Saved to favorites!", Toast.LENGTH_LONG).show()
-//            }
-//        })
-//       model.readAllData.observe(viewLifecycleOwner, { data ->
-//            for (item in data) {
-//                var index = 61
-//
-//                val favId = Array(data.size){"0"}
-//
-//                favId[index] = item.id.toString()
-//                datafav.add(item)
-//
-//                val adds =
-//                    ListDataModel(Integer.parseInt(favId[index]), titleText, descText, "notes", "")
-//                //UserDb.INSTANCE?.userDao()?.insertAll(adds)
-//                datafav.add(adds)
-//                datafav
-//
-//                index++
-//
-//            }
-//        })
-//    }
+        Toast.makeText(context,"$value1 , $value2",Toast.LENGTH_SHORT).show()
 
+        binding.title.setText(value1)
+        binding.desc.setText(value2)
 
+        binding.save.setOnClickListener{
+            value1 = binding.title.text.toString()
+            value2 = binding.desc.text.toString()
 
+            datafav.clear()
+            model.updateNote(positon, value1, value2)
 
-    fun retrieve() {
+            Toast.makeText(context,"Updated!",Toast.LENGTH_SHORT).show()
+            binding.firstLayout.visibility = View.VISIBLE
+            binding.secondLayout.visibility = View.GONE
+            getAllData()
+            }
+        }else{
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
 
-    }
+            builder
+                .setTitle("Delete entry")
+                .setMessage("Are you sure you want to delete this entry?")
+                .setPositiveButton(
+                    R.string.yes
+                ) { _, _ ->
+                    model.delete(positon)
+                    datafav.clear()
+                    getAllData()
+                } // A null listener allows the button to dismiss the dialog and take no further action.
+                .setNegativeButton(R.string.no, null)
+                .setIcon(R.drawable.ic_dialog_alert)
+                .show()
+        }
 
-
-    override fun onAdapterClick(positon: Int) {
 
 
     }
