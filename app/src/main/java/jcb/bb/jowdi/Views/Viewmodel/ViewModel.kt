@@ -17,11 +17,22 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: UserRepository
     lateinit var title :String
     lateinit var desc :String
+    private val userDao = UserDb.getDatabase(application).userDao()
 
     init {
-        val userDao = UserDb.getDatabase(application).userDao()
         repository = UserRepository(userDao)
         readAllData = repository.getAlldata
+    }
+
+
+    fun onClearData(note: Int) {
+        viewModelScope.launch {
+            clearBookmarks(note)
+        }
+    }
+
+    private suspend fun clearBookmarks(note: Int) {
+        userDao.clearDetails(note)
     }
 
     fun addNote(title: String, desc: String) {
@@ -55,5 +66,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     operator fun invoke(id: Int): ListDataModel {
         return repository.getNoteById(id)
     }
+
+
 
 }

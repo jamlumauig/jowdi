@@ -31,5 +31,7 @@ interface UserDao {
     @Query("DELETE FROM datamodels WHERE id = :id")
     fun deleteById(id: Int)
 
+    @Query("DELETE FROM datamodels WHERE id = :userIds")
+    suspend fun clearDetails(userIds: Int): List<ListDataModel>
 
 }

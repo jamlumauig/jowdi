@@ -148,8 +148,9 @@ class NotesFragment : Fragment(), AdapterOnClick {
                 .setPositiveButton(
                     R.string.yes
                 ) { _, _ ->
-                    model.delete(positon)
                     datafav.clear()
+                    model.onClearData(positon)
+                    Toast.makeText(context,"Deleted!",Toast.LENGTH_SHORT).show()
                     getAllData()
                 } // A null listener allows the button to dismiss the dialog and take no further action.
                 .setNegativeButton(R.string.no, null)
