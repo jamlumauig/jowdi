@@ -14,6 +14,12 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import jcb.bb.jowdi.R
 import jcb.bb.jowdi.databinding.FragmentFirstBinding
+import com.google.firebase.database.DatabaseReference
+
+import com.google.firebase.database.FirebaseDatabase
+
+
+
 
 class FirstFragment : Fragment() {
 
@@ -50,6 +56,7 @@ class FirstFragment : Fragment() {
                 binding.editText.editableText.toString() == "j"
 
             ) {
+
                 binding.firstLayout.visibility = View.GONE
                 binding.secondLayout.visibility = View.VISIBLE
                 mp.prepareAsync()

@@ -29,7 +29,7 @@ class SecondFragment : Fragment() {
 
     private lateinit var frontrview: RecyclerView
 
-    private lateinit var adapterx: Adapter
+    private lateinit var adapterx: Adapter<Any?>
 
     private lateinit var model: ViewModel
     private var datafav = ArrayList<ListDataModel>()

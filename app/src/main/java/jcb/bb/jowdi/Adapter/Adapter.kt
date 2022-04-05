@@ -14,8 +14,8 @@ import jcb.bb.jowdi.Views.Model.ListDataModel
 import jcb.bb.jowdi.databinding.CardviewBinding
 import jcb.bb.jowdi.databinding.CardviewtxtBinding
 
-class Adapter(private var mainlist: List<ListDataModel>, private val context: Context) :
-    RecyclerView.Adapter<Adapter.ViewHolder>() {
+class Adapter<T>(private var mainlist: List<ListDataModel>, private val context: Context) :
+    RecyclerView.Adapter<Adapter<Any?>.ViewHolder>() {
 
     private lateinit var dialog: Dialog
 

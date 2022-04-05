@@ -8,12 +8,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import jcb.bb.jowdi.R
 import jcb.bb.jowdi.Views.Model.ListDataModel
+import jcb.bb.jowdi.Views.View.NotesFragment
 import jcb.bb.jowdi.databinding.MusicBinding
 import jcb.bb.jowdi.databinding.NotesssBinding
 
 
 class NotesAdapter(var mainlist: ArrayList<ListDataModel>, var ideaClick: AdapterOnClick) :
     RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+
+    private var datafav = ArrayList<ListDataModel>()
 
     class ViewHolder(binding: NotesssBinding, var clickData: AdapterOnClick) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
@@ -42,18 +45,27 @@ class NotesAdapter(var mainlist: ArrayList<ListDataModel>, var ideaClick: Adapte
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindIdea(mainlist[position])
 
+        val nf = NotesFragment()
+        val id = datafav[position]
+
         holder.bindings.edit.setOnClickListener {
-            holder.clickData.onAdapterClick(position,"edit" )
+            holder.clickData.onAdapterClick(position, "edit")
+
+            nf.title.setText(id.title)
+            nf.desc.setText(id.desc)
         }
         holder.bindings.delete.setOnClickListener {
-            holder.clickData.onAdapterClick(position ,"delete")
+            holder.clickData.onAdapterClick(position, "delete")
+
+
+        }
+    }
+        override fun getItemCount(): Int {
+            return mainlist.size
         }
     }
 
-    override fun getItemCount(): Int {
-        return mainlist.size
-    }
-}
+
 
 
 
