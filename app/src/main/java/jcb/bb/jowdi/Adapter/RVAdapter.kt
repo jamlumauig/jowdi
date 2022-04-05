@@ -10,7 +10,7 @@ class RVAdapter() : RecyclerView.Adapter<RVAdapter.ViewHolder>() {
     class ViewHolder(binding: CardviewtxtBinding) : RecyclerView.ViewHolder(binding.root) {
         var bindings: CardviewtxtBinding = binding
     }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVAdapter.ViewHolder {
         TODO("Not yet implemented")
     }
