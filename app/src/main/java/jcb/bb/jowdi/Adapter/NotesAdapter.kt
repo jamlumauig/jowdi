@@ -3,34 +3,31 @@ package jcb.bb.jowdi.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import jcb.bb.jowdi.R
-import jcb.bb.jowdi.Views.Model.ListDataModel
-import jcb.bb.jowdi.Views.View.NotesFragment
-import jcb.bb.jowdi.databinding.MusicBinding
+import jcb.bb.jowdi.Views.Model.NotesModel
 import jcb.bb.jowdi.databinding.NotesssBinding
 
 
-class NotesAdapter(var mainlist: ArrayList<ListDataModel>, var ideaClick: AdapterOnClick) :
+class NotesAdapter(var mainlist: ArrayList<NotesModel>, var ideaClick: AdapterOnClick) :
     RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
-    private var datafav = ArrayList<ListDataModel>()
+    private val lastClickedItemPosition = 0
 
-    class ViewHolder(binding: NotesssBinding, var clickData: AdapterOnClick) :
+    class ViewHolder(binding: NotesssBinding,  var clickData: AdapterOnClick) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         var bindings: NotesssBinding = binding
-        fun bindIdea(dataPor: ListDataModel) {
+        fun bindIdea(dataPor: NotesModel) {
 
-            //itemView.setOnClickListener(this)
+            itemView.setOnClickListener(this)
             itemView.apply {
                 bindings.title.text = dataPor.title
             }
         }
 
         override fun onClick(v: View?) {
-            //clickData.onAdapterClick(adapterPosition)
+            clickData.onAdapterClick(adapterPosition)
         }
     }
 
@@ -44,26 +41,16 @@ class NotesAdapter(var mainlist: ArrayList<ListDataModel>, var ideaClick: Adapte
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindIdea(mainlist[position])
+    }
 
-        val nf = NotesFragment()
-        val id = datafav[position]
-
-        holder.bindings.edit.setOnClickListener {
-            holder.clickData.onAdapterClick(position, "edit")
-
-            nf.title.setText(id.title)
-            nf.desc.setText(id.desc)
-        }
-        holder.bindings.delete.setOnClickListener {
-            holder.clickData.onAdapterClick(position, "delete")
-
-
-        }
+    fun getLastClickedItemPosition(): Int {
+        return lastClickedItemPosition
     }
         override fun getItemCount(): Int {
             return mainlist.size
         }
     }
+
 
 
 

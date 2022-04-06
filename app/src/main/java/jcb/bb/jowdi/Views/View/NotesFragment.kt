@@ -1,8 +1,8 @@
 package jcb.bb.jowdi.Views.View
 
-import android.R
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,17 +17,16 @@ import androidx.recyclerview.widget.RecyclerView
 
 import jcb.bb.jowdi.Adapter.AdapterOnClick
 import jcb.bb.jowdi.Adapter.NotesAdapter
-import jcb.bb.jowdi.ApiConnection.UserRepository
 import jcb.bb.jowdi.Views.Model.ListDataModel
 import jcb.bb.jowdi.Views.Viewmodel.ViewModel
-import android.content.DialogInterface
-import androidx.annotation.NonNull
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
+import jcb.bb.jowdi.Adapter.StringOnClick
+import jcb.bb.jowdi.Views.Model.ListModel
+import jcb.bb.jowdi.Views.Model.NotesModel
 import jcb.bb.jowdi.database.FirebaseDB
-import kotlinx.coroutines.NonCancellable.children
 
 
 class NotesFragment : Fragment(), AdapterOnClick {
@@ -38,29 +37,37 @@ class NotesFragment : Fragment(), AdapterOnClick {
     private lateinit var rview: RecyclerView
     private lateinit var model: ViewModel
     private var datafav = ArrayList<ListDataModel>()
-     lateinit var datamodel : ListDataModel
+    private var notesModel = ArrayList<NotesModel>()
+    lateinit var datamodel: ListDataModel
+
+    lateinit var listd: List<NotesModel>
 
     lateinit var arrayAdapter: NotesAdapter
-    lateinit var title : EditText
-    lateinit var desc : EditText
+    lateinit var title: EditText
+    lateinit var desc: EditText
 
-    lateinit var titleText :String
-    lateinit var descText :String
+    lateinit var titleText: String
+    lateinit var descText: String
 
-    lateinit var value1 :String
-    lateinit var value2 :String
+    lateinit var value1: String
+    lateinit var value2: String
 
     var fb = FirebaseDB()
+    var gson = Gson()
+    var keyy: Array<String> = arrayOf()
+    lateinit var item: DataSnapshot
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
-        fb.FirebaseDB()
 
         initialize()
         firstactivity()
+
+        getData()
 
         return binding.root
     }
@@ -70,65 +77,50 @@ class NotesFragment : Fragment(), AdapterOnClick {
         model = ViewModelProvider(this).get(ViewModel::class.java)
         rview = binding.listView.apply {
             layoutManager = LinearLayoutManager(
-                context,  LinearLayoutManager.VERTICAL,
-                false)
+                context, LinearLayoutManager.VERTICAL,
+                false
+            )
         }
         title = binding.title
         desc = binding.desc
 
     }
 
-    fun getAllData() {
-        datafav.clear()
-        model.readAllData.observe(viewLifecycleOwner, { data ->
-            rview.visibility = View.VISIBLE
-            rview.alpha = 0f
-            rview.animate().setDuration(300).alpha(1f).withEndAction {
-                for (item in data) {
-                        if (item.category == "notes") {
-                                datafav.add(item)
-                            if (datafav.isEmpty()) {
-                                Toast.makeText(context, "no record!", Toast.LENGTH_SHORT).show()
-                            }
-                                arrayAdapter = NotesAdapter(datafav, this)
-                                rview.adapter = arrayAdapter
+    fun getData() {
+        fb.FirebaseDB().addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                item = snapshot
+                for (item in snapshot.children) {
+                    val data: NotesModel? = item.getValue(NotesModel::class.java)
+                    if (data != null) {
+                        notesModel.add(data)
+                        Log.d("GetData: ", gson.toJson(data).toString())
+
+                        arrayAdapter = NotesAdapter(notesModel, this@NotesFragment)
+                        rview.adapter = arrayAdapter
+
+                    } else {
+                        Toast.makeText(context, "no record!", Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
             }
         })
     }
 
-     fun loadAllData(){
-         fb.get().addValueEventListener(object : ValueEventListener {
-             override fun onDataChange(snapshot: DataSnapshot) {
-                 for (item : DataSnapshot in snapshot.children) {
-                     datamodel = item.value as ListDataModel
-
-                     if (datafav.isEmpty()) {
-                         Toast.makeText(context, "no record!", Toast.LENGTH_SHORT).show()
-                             //  arrayAdapter = NotesAdapter(item, this)
-                         rview.adapter = arrayAdapter
-                     }
-                 }
-             }
-
-             override fun onCancelled(error: DatabaseError) {
-                 TODO("Not yet implemented")
-             }
-
-         })
-     }
     fun firstactivity() {
 
-        getAllData()
+        //getAllData()
 
         binding.addNote.setOnClickListener {
             binding.firstLayout.visibility = View.GONE
             binding.secondLayout.visibility = View.VISIBLE
 
-            binding.save.setOnClickListener{
+            binding.save.setOnClickListener {
                 add()
-
                 //Toast.makeText(context,"Saved!",Toast.LENGTH_SHORT).show()
                 binding.firstLayout.visibility = View.VISIBLE
                 binding.secondLayout.visibility = View.GONE
@@ -137,87 +129,57 @@ class NotesFragment : Fragment(), AdapterOnClick {
         }
 
     }
-    fun add(){
 
-        value1 = binding.title.text.toString()
-        value2 = binding.desc.text.toString()
+    fun add() {
 
-        val listDataModel = ListDataModel(null,value1,value2,"notes","")
-       // datafav.clear()
-       // model.addNote(binding.title.text.toString(), binding.desc.text.toString())
-       // myRef.setValue(listDataModel)
-        fb.add(listDataModel).addOnSuccessListener{
-            Toast.makeText(context,"Saved!",Toast.LENGTH_SHORT).show()
-            binding.firstLayout.visibility = View.VISIBLE
-            binding.secondLayout.visibility = View.GONE
-        }.addOnFailureListener{
-            Toast.makeText(context,"Failed!",Toast.LENGTH_SHORT).show()
+        value1 = binding.title.editableText.toString()
+        value2 = binding.desc.editableText.toString()
+
+        val listModel = ListModel( "notes",value2, "",  value1)
+        fb.add(listModel).addOnSuccessListener {
+            Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(context, "Failed!", Toast.LENGTH_SHORT).show()
         }
-
+        binding.firstLayout.visibility = View.VISIBLE
+        binding.secondLayout.visibility = View.GONE
     }
 
-    override fun onAdapterClick(positon: Int, name: String) {
-        if (name == "edit"){
+    override fun onAdapterClick(positon: Int) {
+        var dataKeys = ""
+        var counter = 0
+
+        for (child in item.children) {
+            if (counter == positon) {
+                dataKeys = dataKeys + child.key + ""
+                break
+            }
+            counter++;
+        }
+        Toast.makeText(context, dataKeys, Toast.LENGTH_SHORT).show()
+
         binding.firstLayout.visibility = View.GONE
         binding.secondLayout.visibility = View.VISIBLE
 
-  /*      value1 = datafav[positon].title
-        value2 = datafav[positon].desc
+        value1 = binding.title.editableText.toString()
+        value2 = binding.desc.editableText.toString()
 
-        Toast.makeText(context,"$value1 , $value2",Toast.LENGTH_SHORT).show()
+        val hashMap: HashMap<String, Any> = HashMap()
+        hashMap["category"] = "notes"
+        hashMap["image"] = ""
+        hashMap["title"] = value1
+        hashMap["desc"] = value2
 
-        binding.title.setText(value1)
-        binding.desc.setText(value2)*/
-/*
-        binding.save.setOnClickListener{
-            value1 = binding.title.text.toString()
-            value2 = binding.desc.text.toString()
+        binding.save.setOnClickListener {
+            fb.update(dataKeys, hashMap).addOnSuccessListener {
+                Toast.makeText(context, hashMap.toString(), Toast.LENGTH_SHORT).show()
 
-            datafav.clear()
-            model.updateNote(positon, value1, value2)
-
-            Toast.makeText(context,"Updated!",Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                Toast.makeText(context, "Failed!", Toast.LENGTH_SHORT).show()
+            }
             binding.firstLayout.visibility = View.VISIBLE
             binding.secondLayout.visibility = View.GONE
-            getAllData()
-            }*/
-
-            value1 = binding.title.text.toString()
-            value2 = binding.desc.text.toString()
-
-            val listDataModel = ListDataModel(null,value1,value2,"notes","")
-            // datafav.clear()
-            // model.addNote(binding.title.text.toString(), binding.desc.text.toString())
-            // myRef.setValue(listDataModel)
-            fb.FirebaseDB()
-            fb.add(listDataModel).addOnSuccessListener{
-                Toast.makeText(context,"Saved!",Toast.LENGTH_SHORT).show()
-                binding.firstLayout.visibility = View.VISIBLE
-                binding.secondLayout.visibility = View.GONE
-            }.addOnFailureListener{
-                Toast.makeText(context,"Failed!",Toast.LENGTH_SHORT).show()
-            }
-        }else{
-            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-
-            builder
-                .setTitle("Delete entry")
-                .setMessage("Are you sure you want to delete this entry?")
-                .setPositiveButton(
-                    R.string.yes
-                ) { _, _ ->
-                    datafav.clear()
-                    model.onClearData(positon)
-                    Toast.makeText(context,"Deleted!",Toast.LENGTH_SHORT).show()
-                    getAllData()
-                } // A null listener allows the button to dismiss the dialog and take no further action.
-                .setNegativeButton(R.string.no, null)
-                .setIcon(R.drawable.ic_dialog_alert)
-                .show()
         }
-
-
-
     }
 
 

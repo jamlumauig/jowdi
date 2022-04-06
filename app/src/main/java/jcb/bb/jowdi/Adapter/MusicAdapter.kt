@@ -26,7 +26,7 @@ class MusicAdapter(var mainlist: ArrayList<ListDataModel>, var ideaClick: Adapte
         }
 
         override fun onClick(v: View?) {
-            clickData.onAdapterClick(adapterPosition,"")
+            clickData.onAdapterClick(adapterPosition)
         }
     }
 

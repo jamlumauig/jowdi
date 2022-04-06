@@ -1,30 +1,32 @@
 package jcb.bb.jowdi.database
 
+import android.util.Log
+import android.widget.Toast
 import com.google.android.gms.tasks.Task
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.Query
+import com.google.firebase.database.*
+import com.google.gson.Gson
+import jcb.bb.jowdi.Adapter.NotesAdapter
 import jcb.bb.jowdi.Views.Model.ListDataModel
+import jcb.bb.jowdi.Views.Model.ListModel
+import jcb.bb.jowdi.Views.Model.NotesModel
 
 class FirebaseDB {
     lateinit var databaseReference : DatabaseReference
 
-    fun FirebaseDB(){
+    fun FirebaseDB() : DatabaseReference {
         val database = FirebaseDatabase.getInstance()
         databaseReference = database.getReference("Jowdi")
+        return databaseReference
     }
- fun add(listDataModel: ListDataModel): Task<Void> {
-     return databaseReference.push().setValue(listDataModel)
- }
+
+     fun add(listModel: ListModel): Task<Void> {
+         return databaseReference.push().setValue(listModel)
+     }
 
     fun update(key : String, hashMap: HashMap<String, Any>): Task<Void> {
         return databaseReference.child(key).updateChildren(hashMap)
     }
     fun remove(key : String) : Task<Void> {
         return databaseReference.child(key).removeValue()
-    }
-
-    fun get() : Query {
-        return databaseReference.orderByKey()
     }
 }
