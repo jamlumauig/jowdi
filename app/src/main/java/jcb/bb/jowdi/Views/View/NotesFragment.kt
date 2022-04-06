@@ -29,7 +29,7 @@ import jcb.bb.jowdi.Views.Model.NotesModel
 import jcb.bb.jowdi.database.FirebaseDB
 
 
-class NotesFragment : Fragment(), AdapterOnClick {
+class NotesFragment : Fragment(), StringOnClick {
 
     private var _binding: FragmentNotesBinding? = null
     private val binding get() = _binding!!
@@ -96,7 +96,7 @@ class NotesFragment : Fragment(), AdapterOnClick {
                         notesModel.add(data)
                         Log.d("GetData: ", gson.toJson(data).toString())
 
-                        arrayAdapter = NotesAdapter(notesModel, this@NotesFragment)
+                        arrayAdapter = NotesAdapter(notesModel, this@NotesFragment , requireContext())
                         rview.adapter = arrayAdapter
 
                     } else {
@@ -149,7 +149,7 @@ class NotesFragment : Fragment(), AdapterOnClick {
         var dataKeys = ""
         var counter = 0
 
-        for (child in item.children) {
+         for (child in item.children) {
             if (counter == positon) {
                 dataKeys = dataKeys + child.key + ""
                 break
@@ -180,6 +180,10 @@ class NotesFragment : Fragment(), AdapterOnClick {
             binding.firstLayout.visibility = View.VISIBLE
             binding.secondLayout.visibility = View.GONE
         }
+    }
+
+    override fun onItemLongClick(position: Int, v: View?) {
+
     }
 
 
