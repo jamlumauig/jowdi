@@ -9,6 +9,7 @@ import jcb.bb.jowdi.Adapter.NotesAdapter
 import jcb.bb.jowdi.Views.Model.ListDataModel
 import jcb.bb.jowdi.Views.Model.ListModel
 import jcb.bb.jowdi.Views.Model.NotesModel
+import java.text.FieldPosition
 
 class FirebaseDB {
     lateinit var databaseReference : DatabaseReference
