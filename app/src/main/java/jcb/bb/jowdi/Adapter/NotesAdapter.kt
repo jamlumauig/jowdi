@@ -21,9 +21,7 @@ import com.google.firebase.database.ValueEventListener
 
 class NotesAdapter(
     var mainlist: ArrayList<NotesModel>,
-    var ideaClick: StringOnClick,
-    var context: Context
-) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+    var ideaClick: StringOnClick) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
     class ViewHolder(binding: NotesssBinding, var LongClick: StringOnClick , var clickData: StringOnClick) :
         RecyclerView.ViewHolder(binding.root), View.OnLongClickListener,  View.OnClickListener {
         var bindings: NotesssBinding = binding

@@ -2,6 +2,7 @@ package jcb.bb.jowdi.database
 
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.NonNull
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import com.google.gson.Gson
@@ -29,5 +30,6 @@ class FirebaseDB {
     }
     fun remove(key : String) : Task<Void> {
         return databaseReference.child(key).removeValue()
+
     }
 }

@@ -67,11 +67,12 @@ class EditNotesFragment : Fragment(), StringOnClick {
     ): View {
 
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
-
         initialize()
-        //firstactivity()
-        btnClick()
+        fb.FirebaseDB()
+        binding.firstLayout.visibility = View.GONE
+        binding.secondLayout.visibility = View.VISIBLE
         froNotesFragment  = arguments?.getString("btn")
+        btnClick()
 
         return binding.root
     }
@@ -79,10 +80,9 @@ class EditNotesFragment : Fragment(), StringOnClick {
     fun btnClick(){
         when(froNotesFragment){
             "addNotes"->{
+
                 binding.save.setOnClickListener {
                     add()
-                    //findNavController().navigate(R.id.action_NotesFragment_to_SecondFragment, froNotesFragment)
-
                 }
             }
 
@@ -103,7 +103,7 @@ class EditNotesFragment : Fragment(), StringOnClick {
     fun getData() {
         binding.firstLayout.visibility = View.VISIBLE
         binding.secondLayout.visibility = View.GONE
-
+        notesModel.clear()
         fb.FirebaseDB().addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 item = snapshot
@@ -113,7 +113,7 @@ class EditNotesFragment : Fragment(), StringOnClick {
                         notesModel.add(data)
                         Log.d("GetData: ", gson.toJson(data).toString())
                         arrayAdapter =
-                            NotesAdapter(notesModel, this@EditNotesFragment, requireContext())
+                            NotesAdapter(notesModel, this@EditNotesFragment)
                         rview.adapter = arrayAdapter
 
                     }
@@ -145,12 +145,16 @@ class EditNotesFragment : Fragment(), StringOnClick {
     }
 
     fun add() {
+        binding.firstLayout.visibility = View.GONE
+        binding.secondLayout.visibility = View.VISIBLE
+
         value1 = binding.title.editableText.toString()
         value2 = binding.desc.editableText.toString()
 
         val listModel = ListModel("notes", value2, "", value1)
         fb.add(listModel).addOnSuccessListener {
             Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_EditNotesFragment_to_NotedFragment)
         }.addOnFailureListener {
             Toast.makeText(context, "Failed!", Toast.LENGTH_SHORT).show()
         }

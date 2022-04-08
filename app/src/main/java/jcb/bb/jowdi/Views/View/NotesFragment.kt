@@ -1,5 +1,6 @@
 package jcb.bb.jowdi.Views.View
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.res.Resources
 import android.os.Bundle
@@ -10,12 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import jcb.bb.jowdi.databinding.FragmentNotesBinding
 
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.Task
 
 import jcb.bb.jowdi.Adapter.NotesAdapter
 import jcb.bb.jowdi.Views.Model.ListDataModel
@@ -31,6 +35,8 @@ import jcb.bb.jowdi.Views.Model.NotesModel
 import jcb.bb.jowdi.database.FirebaseDB
 import com.google.firebase.ktx.Firebase
 import jcb.bb.jowdi.R
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.database.DatabaseReference
 
 
 class NotesFragment : Fragment(), StringOnClick {
@@ -40,9 +46,7 @@ class NotesFragment : Fragment(), StringOnClick {
 
     private lateinit var rview: RecyclerView
     private lateinit var model: ViewModel
-    private var datafav = ArrayList<ListDataModel>()
     private var notesModel = ArrayList<NotesModel>()
-    lateinit var datamodel: ListDataModel
 
     var keykey: Array<String> = arrayOf()
 
@@ -60,52 +64,51 @@ class NotesFragment : Fragment(), StringOnClick {
     var gson = Gson()
     lateinit var item: DataSnapshot
 
-    var bundle = Bundle()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
-
         initialize()
+        fb.FirebaseDB()
+        btnClick()
+
         return binding.root
     }
 
+    fun btnClick() {
+        binding.addNote.setOnClickListener {
+            binding.firstLayout.visibility = View.GONE
+            binding.secondLayout.visibility = View.VISIBLE
+
+            binding.save.setOnClickListener {
+                add()
+            }
+        }
+    }
 
     private fun initialize() {
-        model = ViewModelProvider(this).get(ViewModel::class.java)
-        rview = binding.listView.apply {
-            layoutManager = LinearLayoutManager(
-                context, LinearLayoutManager.VERTICAL,
-                false
-            )
-        }
-
         title = binding.title
         desc = binding.desc
 
-        buttonCLick()
+        rview = binding.listView
+        rview.layoutManager = LinearLayoutManager(
+            context, LinearLayoutManager.VERTICAL,
+            false
+        )
         getData()
-
-
     }
 
-    fun buttonCLick(){
-
-        binding.addNote.setOnClickListener {
-            bundle.putString("btn", "addNote")
-            findNavController().navigate(R.id.action_NotesFragment_to_EditNotes, bundle )
-        }
-
-    }
 
     fun getData() {
+
         binding.firstLayout.visibility = View.VISIBLE
         binding.secondLayout.visibility = View.GONE
+        notesModel.clear()
 
         fb.FirebaseDB().addValueEventListener(object : ValueEventListener {
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
                 item = snapshot
                 for (item in snapshot.children) {
@@ -114,8 +117,9 @@ class NotesFragment : Fragment(), StringOnClick {
                         notesModel.add(data)
                         Log.d("GetData: ", gson.toJson(data).toString())
                         arrayAdapter =
-                            NotesAdapter(notesModel, this@NotesFragment, requireContext())
+                            NotesAdapter(notesModel, this@NotesFragment)
                         rview.adapter = arrayAdapter
+                        arrayAdapter.notifyDataSetChanged()
 
                     }
                 }
@@ -127,24 +131,67 @@ class NotesFragment : Fragment(), StringOnClick {
         })
     }
 
+    fun add() {
+        value1 = binding.title.editableText.toString()
+        value2 = binding.desc.editableText.toString()
+
+        val listModel = ListModel("notes", value2, "", value1)
+        fb.add(listModel).addOnSuccessListener {
+            Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+            getData()
+        }.addOnFailureListener {
+            Toast.makeText(context, "Failed!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onAdapterClick(positon: Int) {
+        notesModel.clear()
         binding.firstLayout.visibility = View.GONE
         binding.secondLayout.visibility = View.VISIBLE
         var dataKeys = ""
         var counter = 0
-        for (child in item.children) {
-            if (counter == positon) {
-                dataKeys =  child.key!!
-                break
+
+        fb.FirebaseDB().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (item in snapshot.children) {
+                    if (counter == positon) {
+                        dataKeys = item.key!!
+                        break
+                    }
+                    counter++
+                }
+
+                Toast.makeText(context, dataKeys, Toast.LENGTH_SHORT).show()
+
+                value1 = binding.title.editableText.toString()
+                value2 = binding.desc.editableText.toString()
+
+                val hashMap: HashMap<String, Any> = HashMap()
+                hashMap["category"] = "notes"
+                hashMap["image"] = ""
+                hashMap["title"] = value1
+                hashMap["desc"] = value2
+
+                Log.d("UPDATE1 ", "$value1 $value2")
+
+                binding.save.setOnClickListener {
+                    Log.d("UPDATE2 ", "$value1 $value2")
+
+                    /*   fb.update(dataKeys, hashMap).addOnSuccessListener {
+                           Log.d("UPDATE2 ", "$value1 $value2")
+                           // Toast.makeText(context, hashMap.toString(), Toast.LENGTH_SHORT).show()
+                       }.addOnFailureListener {
+                           Toast.makeText(context, "Failed!", Toast.LENGTH_SHORT).show()
+                       }*/
+                    getData()
+
+                }
             }
-            counter++;
-        }
 
-        bundle.putString("btn", "update")
-        bundle.putString("key", dataKeys)
-        findNavController().navigate(R.id.action_NotesFragment_to_EditNotes, bundle )
-
-       // Toast.makeText(context, dataKeys, Toast.LENGTH_SHORT).show()
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     override fun onItemLongClick(position: Int, v: View?) {
@@ -154,19 +201,31 @@ class NotesFragment : Fragment(), StringOnClick {
             .setPositiveButton("Yes") { _, _ ->
                 var dataKeys = ""
                 var counter = 0
-                fb.FirebaseDB().addValueEventListener(object : ValueEventListener {
+                fb.FirebaseDB().addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         for (item in snapshot.children) {
                             if (counter == position) {
-                                dataKeys =  item.key!!
+                                dataKeys = item.key!!
                                 break
                             }
                             counter++
                         }
+
                         fb.remove(dataKeys)
-                        initialize()
-                        Toast.makeText(context,"deleted!!", Toast.LENGTH_SHORT).show()
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.d("LOL TAG", "$dataKeys Element removed successfully!")
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "deleted!!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    getData()
+
+                                }
+                            }
                     }
+
                     override fun onCancelled(error: DatabaseError) {
                         TODO("Not yet implemented")
                     }
@@ -177,6 +236,7 @@ class NotesFragment : Fragment(), StringOnClick {
             }
         val alert = builder.create()
         alert.show()
+        getData()
     }
 
 
