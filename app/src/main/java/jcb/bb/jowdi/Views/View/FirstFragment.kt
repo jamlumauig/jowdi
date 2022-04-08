@@ -53,8 +53,7 @@ class FirstFragment : Fragment() {
         binding.buttonFirst.setOnClickListener {
             if (binding.editText.editableText.toString() == "JODEL" ||
                 binding.editText.editableText.toString() == "MAHAL" ||
-                binding.editText.editableText.toString() == "j"
-
+                binding.editText.editableText.toString() == "J"
             ) {
 
                 binding.firstLayout.visibility = View.GONE

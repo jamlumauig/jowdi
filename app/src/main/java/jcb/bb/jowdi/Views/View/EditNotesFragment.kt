@@ -33,16 +33,14 @@ import com.google.firebase.ktx.Firebase
 import jcb.bb.jowdi.R
 
 
-class NotesFragment : Fragment(), StringOnClick {
+class EditNotesFragment : Fragment(), StringOnClick {
 
     private var _binding: FragmentNotesBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var rview: RecyclerView
     private lateinit var model: ViewModel
-    private var datafav = ArrayList<ListDataModel>()
     private var notesModel = ArrayList<NotesModel>()
-    lateinit var datamodel: ListDataModel
 
     var keykey: Array<String> = arrayOf()
 
@@ -58,9 +56,10 @@ class NotesFragment : Fragment(), StringOnClick {
 
     var fb = FirebaseDB()
     var gson = Gson()
+    lateinit var keyy: ArrayList<String>
     lateinit var item: DataSnapshot
 
-    var bundle = Bundle()
+    var froNotesFragment: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,36 +69,36 @@ class NotesFragment : Fragment(), StringOnClick {
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
 
         initialize()
+        //firstactivity()
+        btnClick()
+        froNotesFragment  = arguments?.getString("btn")
+
         return binding.root
     }
 
+    fun btnClick(){
+        when(froNotesFragment){
+            "addNotes"->{
+                binding.save.setOnClickListener {
+                    add()
+                    //findNavController().navigate(R.id.action_NotesFragment_to_SecondFragment, froNotesFragment)
+
+                }
+            }
+
+            "updateNotes"->{
+
+            }
+        }
+    }
 
     private fun initialize() {
-        model = ViewModelProvider(this).get(ViewModel::class.java)
-        rview = binding.listView.apply {
-            layoutManager = LinearLayoutManager(
-                context, LinearLayoutManager.VERTICAL,
-                false
-            )
-        }
-
+        //model = ViewModelProvider(this).get(ViewModel::class.java)
         title = binding.title
         desc = binding.desc
 
-        buttonCLick()
-        getData()
-
-
     }
 
-    fun buttonCLick(){
-
-        binding.addNote.setOnClickListener {
-            bundle.putString("btn", "addNote")
-            findNavController().navigate(R.id.action_NotesFragment_to_EditNotes, bundle )
-        }
-
-    }
 
     fun getData() {
         binding.firstLayout.visibility = View.VISIBLE
@@ -114,7 +113,7 @@ class NotesFragment : Fragment(), StringOnClick {
                         notesModel.add(data)
                         Log.d("GetData: ", gson.toJson(data).toString())
                         arrayAdapter =
-                            NotesAdapter(notesModel, this@NotesFragment, requireContext())
+                            NotesAdapter(notesModel, this@EditNotesFragment, requireContext())
                         rview.adapter = arrayAdapter
 
                     }
@@ -127,11 +126,43 @@ class NotesFragment : Fragment(), StringOnClick {
         })
     }
 
+    fun firstactivity() {
+
+        getData()
+
+        binding.addNote.setOnClickListener {
+            binding.firstLayout.visibility = View.GONE
+            binding.secondLayout.visibility = View.VISIBLE
+
+            binding.save.setOnClickListener {
+                add()
+                binding.firstLayout.visibility = View.VISIBLE
+                binding.secondLayout.visibility = View.GONE
+
+            }
+        }
+
+    }
+
+    fun add() {
+        value1 = binding.title.editableText.toString()
+        value2 = binding.desc.editableText.toString()
+
+        val listModel = ListModel("notes", value2, "", value1)
+        fb.add(listModel).addOnSuccessListener {
+            Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(context, "Failed!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onAdapterClick(positon: Int) {
         binding.firstLayout.visibility = View.GONE
         binding.secondLayout.visibility = View.VISIBLE
         var dataKeys = ""
         var counter = 0
+
+
         for (child in item.children) {
             if (counter == positon) {
                 dataKeys =  child.key!!
@@ -140,11 +171,28 @@ class NotesFragment : Fragment(), StringOnClick {
             counter++;
         }
 
-        bundle.putString("btn", "update")
-        bundle.putString("key", dataKeys)
-        findNavController().navigate(R.id.action_NotesFragment_to_EditNotes, bundle )
 
-       // Toast.makeText(context, dataKeys, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, dataKeys, Toast.LENGTH_SHORT).show()
+
+        value1 = binding.title.editableText.toString()
+        value2 = binding.desc.editableText.toString()
+
+        val hashMap: HashMap<String, Any> = HashMap()
+        hashMap["category"] = "notes"
+        hashMap["image"] = ""
+        hashMap["title"] = value1
+        hashMap["desc"] = value2
+
+        binding.save.setOnClickListener {
+            fb.update(dataKeys, hashMap).addOnSuccessListener {
+                Toast.makeText(context, hashMap.toString(), Toast.LENGTH_SHORT).show()
+
+            }.addOnFailureListener {
+                Toast.makeText(context, "Failed!", Toast.LENGTH_SHORT).show()
+            }
+            binding.firstLayout.visibility = View.VISIBLE
+            binding.secondLayout.visibility = View.GONE
+        }
     }
 
     override fun onItemLongClick(position: Int, v: View?) {
@@ -164,7 +212,6 @@ class NotesFragment : Fragment(), StringOnClick {
                             counter++
                         }
                         fb.remove(dataKeys)
-                        initialize()
                         Toast.makeText(context,"deleted!!", Toast.LENGTH_SHORT).show()
                     }
                     override fun onCancelled(error: DatabaseError) {
@@ -177,6 +224,7 @@ class NotesFragment : Fragment(), StringOnClick {
             }
         val alert = builder.create()
         alert.show()
+        getData()
     }
 
 

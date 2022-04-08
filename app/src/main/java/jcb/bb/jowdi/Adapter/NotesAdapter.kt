@@ -1,5 +1,6 @@
 package jcb.bb.jowdi.Adapter
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
@@ -14,23 +15,23 @@ import jcb.bb.jowdi.Views.Model.NotesModel
 import jcb.bb.jowdi.database.FirebaseDB
 import jcb.bb.jowdi.databinding.NotesssBinding
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
 
 class NotesAdapter(
     var mainlist: ArrayList<NotesModel>,
-    var key: ArrayList<String>,
     var ideaClick: StringOnClick,
     var context: Context
-) :
-    RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
-
-
-    class ViewHolder(binding: NotesssBinding, var clickData: StringOnClick) :
-        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+    class ViewHolder(binding: NotesssBinding, var LongClick: StringOnClick , var clickData: StringOnClick) :
+        RecyclerView.ViewHolder(binding.root), View.OnLongClickListener,  View.OnClickListener {
         var bindings: NotesssBinding = binding
         fun bindIdea(dataPor: NotesModel) {
 
             itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
+
             itemView.apply {
                 bindings.title.text = dataPor.title
             }
@@ -39,6 +40,12 @@ class NotesAdapter(
         override fun onClick(v: View?) {
             clickData.onAdapterClick(adapterPosition)
         }
+
+        override fun onLongClick(p0: View?): Boolean {
+            LongClick.onItemLongClick(adapterPosition, p0)
+            return true
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -46,50 +53,11 @@ class NotesAdapter(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.notesss, parent, false
-            ), ideaClick
+            ), ideaClick, ideaClick
         )
 
-    fun setfirebase(){
-       val fb  = FirebaseDB()
-        fb.databaseReference.key
-    }
-
-    override fun onBindViewHolder(@NonNull holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(@NonNull holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.bindIdea(mainlist[position])
-        holder.itemView.setOnLongClickListener {
-            val builder = AlertDialog.Builder(context)
-            builder.setMessage("Are you sure you want to Delete?")
-                .setCancelable(false)
-                .setPositiveButton("Yes") { _, _ ->
-                    val fb  = FirebaseDB()
-                    fb.databaseReference.key
-
-                    //Toast.makeText(context, fb.toString(), Toast.LENGTH_SHORT).show()
-
-                    for (child in fb.children) {
-                        if (counter == position) {
-                            dataKeys = dataKeys + child.key + ""
-                            break
-                        }
-                        counter++;
-                    }
-                    Toast.makeText(context, dataKeys, Toast.LENGTH_SHORT).show()
-
-
-                    /*  if (key != null) {
-                          fb.remove(key)
-                          Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
-
-                      }*/
-                }
-                .setNegativeButton("No") { dialog, _ ->
-                    // Dismiss the dialog
-                    dialog.dismiss()
-                }
-            val alert = builder.create()
-            alert.show()
-            true
-        }
     }
 
     override fun getItemCount(): Int {
