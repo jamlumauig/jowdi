@@ -21,12 +21,17 @@ class FirebaseDB {
         return databaseReference
     }
 
-     fun add(listModel: ListModel): Task<Void> {
-         return databaseReference.push().setValue(listModel)
+     fun add(listModel: NotesModel): Task<Void> {
+         val keyId = databaseReference.push().key.toString()
+         listModel.id = keyId
+
+         return databaseReference.child(
+             keyId
+         ).setValue(listModel)
      }
 
-    fun update(key : String, hashMap: HashMap<String, Any>): Task<Void> {
-        return databaseReference.child(key).updateChildren(hashMap)
+    fun update(key : String?, list: HashMap<String, Any>): Task<Void> {
+        return databaseReference.child(key.toString()).updateChildren(list)
     }
     fun remove(key : String) : Task<Void> {
         return databaseReference.child(key).removeValue()

@@ -20,19 +20,32 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/layout1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/lot"
+                    <ImageView
+                        android:id="@+id/top_curve"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="-50dp"
+                        android:layout_marginTop="-50dp"
+                        android:layout_marginEnd="-50dp"
+                        android:src="@drawable/top_shape"
+                        app:layout_constraintBottom_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/textview_first"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="-70dp"
                         android:scaleType="fitXY"
-                        app:lottie_autoPlay="true"
-                        app:lottie_loop="true"
-                        app:lottie_url="https://assets8.lottiefiles.com/packages/lf20_shlwmfns.json" />
+                        android:src="@drawable/navbar" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -40,7 +53,7 @@
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingBottom="20dp">
-dfdd
+
                         <ImageButton
                             android:id="@+id/btn1"
                             android:layout_width="90dp"

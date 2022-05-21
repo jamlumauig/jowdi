@@ -18,7 +18,7 @@
         android:theme="@style/Theme.Jowdi">
 
         <activity
-            android:name=".Views.View.MainActivity"
+            android:name=".Views.View.SplashActvity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Jowdi.NoActionBar">
@@ -28,6 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Views.View.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Jowdi.NoActionBar"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:layout_margin="20dp"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             android:padding="5dp">
             <EditText
                 android:id="@+id/title"

@@ -58,6 +58,8 @@ class FirstFragment : Fragment() {
 
                 binding.firstLayout.visibility = View.GONE
                 binding.secondLayout.visibility = View.VISIBLE
+
+
                 mp.prepareAsync()
                 mp.setOnPreparedListener { mp.start() }
 

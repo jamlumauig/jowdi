@@ -15,16 +15,18 @@ class SplashActvity : AppCompatActivity() {
     private lateinit var inlogo: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       /* setContentView(R.layout.splash_layout)
-        inlogo = findViewById(R.id.splashid)*/
+        setContentView(R.layout.splash_layout)
+        inlogo = findViewById(R.id.splashid)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         startSplash()
     }
 
     private fun startSplash() {
-        /*Glide.with(this)
-            .load(R.raw.splash)
-            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
-            .into(inlogo)*/
+            val handler = Handler()
+            handler.postDelayed({
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }, 2000)
+
     }
 }
