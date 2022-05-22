@@ -6,21 +6,18 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import jcb.bb.jowdi.R
-import jcb.bb.jowdi.Views.Model.ListDataModel
+import jcb.bb.jowdi.Views.Model.NotesModel
 import jcb.bb.jowdi.databinding.MusicBinding
 
-
-class MusicAdapter(var mainlist: ArrayList<ListDataModel>, var ideaClick: AdapterOnClick) :
+class MusicAdapter(var mainlist: ArrayList<NotesModel>, var ideaClick: AdapterOnClick) :
     RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
 
     class ViewHolder(binding: MusicBinding, var clickData: AdapterOnClick) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         var bindings: MusicBinding = binding
-        fun bindIdea(dataPor: ListDataModel) {
-
+        fun bindIdea(dataPor: NotesModel) {
             itemView.setOnClickListener(this)
             itemView.apply {
-
                 bindings.title.text = dataPor.desc
             }
         }

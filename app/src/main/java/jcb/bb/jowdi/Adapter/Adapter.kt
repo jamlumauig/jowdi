@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import jcb.bb.jowdi.R
-import jcb.bb.jowdi.Views.Model.ListDataModel
+import jcb.bb.jowdi.Views.Model.NotesModel
 import jcb.bb.jowdi.databinding.CardBinding
 
-class Adapter(private var mainlist: List<ListDataModel>, private val context: Context) :
+class Adapter(private var mainlist: ArrayList<NotesModel>, private val context: Context) :
     RecyclerView.Adapter<Adapter.ViewHolder>() {
 
 

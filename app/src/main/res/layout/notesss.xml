@@ -1,32 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:layout_marginHorizontal="5sp"
         android:orientation="horizontal"
-        android:padding="5dp"
-        android:background="@color/teal_200"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="10dp">
+        android:padding="5dp">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/note"
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
             android:fontFamily="@font/finger_paint"
             android:gravity="start|top"
             android:padding="10dp"
-            android:shadowColor="#CA6060"
+            android:shadowColor="#DC0A0A"
             android:shadowDx="3"
             android:shadowDy="3"
             android:shadowRadius="5"
             android:text="First Reason"
-            android:textColor="#332727"
+            android:textColor="#FFFFFF"
             android:textSize="17sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="101dp"
             tools:layout_editor_absoluteY="316d" />
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

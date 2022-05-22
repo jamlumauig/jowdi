@@ -1,5 +1,6 @@
 package jcb.bb.jowdi.Views.View
 
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
@@ -9,21 +10,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import jcb.bb.jowdi.Adapter.AdapterOnClick
 import jcb.bb.jowdi.Adapter.MusicAdapter
 import jcb.bb.jowdi.R
-import jcb.bb.jowdi.Views.Model.ListDataModel
-import jcb.bb.jowdi.Views.Viewmodel.ViewModel
 import jcb.bb.jowdi.databinding.FragmentFourthBinding
-import android.media.MediaPlayer.OnPreparedListener
 import android.os.Handler
+import android.view.animation.AnimationUtils
 import android.widget.SeekBar
-import android.widget.Toast
-import java.io.IOException
-
+import androidx.navigation.fragment.findNavController
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
+import jcb.bb.jowdi.Views.Model.NotesModel
+import jcb.bb.jowdi.database.FirebaseDB
 
 class FourthFragment : Fragment(), AdapterOnClick {
 
@@ -33,11 +35,13 @@ class FourthFragment : Fragment(), AdapterOnClick {
     private lateinit var rview: RecyclerView
     private lateinit var adapterx: MusicAdapter
 
-    private lateinit var model: ViewModel
-    private var datafav = ArrayList<ListDataModel>()
+    private var datafav = ArrayList<NotesModel>()
     lateinit var title: TextView
 
-    var fromSecond: String? = null
+    var fb = FirebaseDB()
+    var gson = Gson()
+    lateinit var item: DataSnapshot
+
     lateinit var SongTitle: String
     lateinit var SongLink: String
 
@@ -47,6 +51,7 @@ class FourthFragment : Fragment(), AdapterOnClick {
     lateinit var music: LinearLayout
 
     lateinit var seek: SeekBar
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,12 +59,19 @@ class FourthFragment : Fragment(), AdapterOnClick {
 
         _binding = FragmentFourthBinding.inflate(inflater, container, false)
         initialize()
-
+        animation()
         return binding.root
     }
 
+    private fun animation() {
+        val top_curve_anim = AnimationUtils.loadAnimation(context, R.anim.top_down)
+        binding.title.startAnimation(top_curve_anim)
+
+        val field_name_anim = AnimationUtils.loadAnimation(context, R.anim.field_name_anim)
+        binding.rview.startAnimation(field_name_anim)
+    }
+
     private fun initialize() {
-        model = ViewModelProvider(this).get(ViewModel::class.java)
         linear2 = binding.linear2
         music = binding.music
         seek = binding.seekBar
@@ -71,11 +83,14 @@ class FourthFragment : Fragment(), AdapterOnClick {
             false
         )
 
-        binding.back.setOnClickListener{
+        binding.back.setOnClickListener {
             music.visibility = View.GONE
             linear2.visibility = View.VISIBLE
             mp.stop()
             mp.reset()
+        }
+        binding.back2.setOnClickListener {
+            findNavController().navigate(R.id.action_FourthFragment_to_SecondFragment)
         }
 
         run()
@@ -83,25 +98,35 @@ class FourthFragment : Fragment(), AdapterOnClick {
 
     fun run() {
         datafav.clear()
-        model.readAllData.observe(viewLifecycleOwner, { data ->
-            rview.visibility = View.VISIBLE
-            rview.alpha = 0f
-            rview.animate().setDuration(300).alpha(1f).withEndAction {
-                for (item in data) {
-                    if (item.category == "music") {
-                        datafav.add(item)
-                        adapterx = MusicAdapter(datafav, this)
+        fb.musics().addValueEventListener(object : ValueEventListener {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onDataChange(snapshot: DataSnapshot) {
+                item = snapshot
+                for (item in snapshot.children) {
+                    val data: NotesModel? = item.getValue(NotesModel::class.java)
+                    if (data != null) {
+                        datafav.add(data)
+                        Log.d("GetData: ", gson.toJson(data).toString())
+                        adapterx =
+                            MusicAdapter(datafav, this@FourthFragment)
                         rview.adapter = adapterx
+                        adapterx.notifyDataSetChanged()
                     }
                 }
             }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
         })
+
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
         mp.stop()
+        mp.reset()
         _binding = null
     }
 
@@ -148,8 +173,8 @@ class FourthFragment : Fragment(), AdapterOnClick {
 
     override fun onAdapterClick(positon: Int) {
         var position = positon
-        SongTitle = datafav[position].desc
-        SongLink = datafav[position].image
+        SongTitle = datafav[position].desc.toString()
+        SongLink = datafav[position].image.toString()
         Log.e("SongTITLE", SongTitle)
 
         music.visibility = View.VISIBLE
@@ -184,8 +209,8 @@ class FourthFragment : Fragment(), AdapterOnClick {
                 try {
                     mp.stop()
                     mp.reset()
-                    SongTitle = datafav[position].desc
-                    SongLink = datafav[position].image
+                    SongTitle = datafav[position].desc.toString()
+                    SongLink = datafav[position].image.toString()
                     binding.title.text = SongTitle
                     mp.setDataSource(SongLink)
                     mp.prepareAsync()
@@ -212,8 +237,8 @@ class FourthFragment : Fragment(), AdapterOnClick {
                 try {
                     mp.stop()
                     mp.reset()
-                    SongTitle = datafav[position].desc
-                    SongLink = datafav[position].image
+                    SongTitle = datafav[position].desc.toString()
+                    SongLink = datafav[position].image.toString()
                     binding.title.text = SongTitle
                     mp.setDataSource(SongLink)
                     mp.prepareAsync()

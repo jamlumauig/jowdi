@@ -2,9 +2,7 @@ package jcb.bb.jowdi.Views.View
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
-import android.media.MediaPlayer.create
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +12,9 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import jcb.bb.jowdi.R
 import jcb.bb.jowdi.databinding.FragmentFirstBinding
-import com.google.firebase.database.DatabaseReference
-
-import com.google.firebase.database.FirebaseDatabase
-
-
+import android.net.Uri
+import android.os.Handler
+import android.view.WindowManager
 
 
 class FirstFragment : Fragment() {
@@ -26,8 +22,8 @@ class FirstFragment : Fragment() {
     private var _binding: FragmentFirstBinding? = null
     private val binding get() = _binding!!
     var b = Bundle()
-    private lateinit var result: EditText
 
+    private lateinit var result: EditText
     private val mp: MediaPlayer = MediaPlayer()
 
     override fun onCreateView(
@@ -36,14 +32,11 @@ class FirstFragment : Fragment() {
     ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
-        mp.setDataSource("https://firebasestorage.googleapis.com/v0/b/jowdi-project.appspot.com/o/music%2Fhbd.mp3?alt=media&token=e5f75db6-d92d-453c-8100-e296d962bcb6")
         return binding.root
-
     }
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
 
         result = binding.editText
@@ -59,20 +52,17 @@ class FirstFragment : Fragment() {
                 binding.firstLayout.visibility = View.GONE
                 binding.secondLayout.visibility = View.VISIBLE
 
+                val simpleVideoView = binding.simpleVideoView
+                simpleVideoView.setVideoURI(Uri.parse("android.resource://" + context?.packageName.toString() + "/" + R.raw.jodel))
+                simpleVideoView.start()
 
-                mp.prepareAsync()
-                mp.setOnPreparedListener { mp.start() }
-
-                binding.btn.setOnClickListener {
+                Handler().postDelayed({
                     findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, b)
-                    mp.stop()
-                    mp.reset()
-                }
+                }, 10000)
             } else {
                 Toast.makeText(context, "DI KITA LAB HAHA\nPLEASE ENTER AGAIN", Toast.LENGTH_SHORT)
                     .show()
             }
-
         }
     }
 

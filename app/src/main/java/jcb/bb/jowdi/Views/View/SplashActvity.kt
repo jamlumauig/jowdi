@@ -6,9 +6,6 @@ import android.os.Handler
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import jcb.bb.jowdi.R
 
 class SplashActvity : AppCompatActivity() {
@@ -22,11 +19,11 @@ class SplashActvity : AppCompatActivity() {
     }
 
     private fun startSplash() {
-            val handler = Handler()
-            handler.postDelayed({
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }, 2000)
+        val handler = Handler()
+        handler.postDelayed({
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }, 2000)
 
     }
 }

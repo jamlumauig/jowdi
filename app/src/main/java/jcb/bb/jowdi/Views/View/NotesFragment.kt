@@ -8,19 +8,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import androidx.recyclerview.widget.RecyclerView
-
 import jcb.bb.jowdi.Adapter.NotesAdapter
-import jcb.bb.jowdi.Views.Viewmodel.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
 import jcb.bb.jowdi.Adapter.StringOnClick
+import jcb.bb.jowdi.R
 import jcb.bb.jowdi.Views.Model.NotesModel
 import jcb.bb.jowdi.database.FirebaseDB
 import jcb.bb.jowdi.databinding.FragmentNotesBinding
@@ -31,17 +31,11 @@ class NotesFragment : Fragment(), StringOnClick {
     private val binding get() = _binding!!
 
     private lateinit var rview: RecyclerView
-    private lateinit var model: ViewModel
     private var notesModel = ArrayList<NotesModel>()
-
-    var keykey: Array<String> = arrayOf()
 
     var arrayAdapter: NotesAdapter? = null
     lateinit var title: EditText
     lateinit var desc: EditText
-
-    lateinit var titleText: String
-    lateinit var descText: String
 
     var fb = FirebaseDB()
     var gson = Gson()
@@ -56,19 +50,46 @@ class NotesFragment : Fragment(), StringOnClick {
         initialize()
         fb.FirebaseDB()
         btnClick()
-
+        animation()
         return binding.root
     }
 
+    private fun animation() {
+        val top_curve_anim = AnimationUtils.loadAnimation(context, R.anim.top_down)
+        binding.topCurve.startAnimation(top_curve_anim)
+
+        val field_name_anim = AnimationUtils.loadAnimation(context, R.anim.field_name_anim)
+        binding.bck.startAnimation(field_name_anim)
+        binding.header.startAnimation(field_name_anim)
+        binding.secondLayout.startAnimation(field_name_anim)
+
+        val center_reveal_anim = AnimationUtils.loadAnimation(context, R.anim.center_reveal_anim)
+        binding.listView.startAnimation(center_reveal_anim)
+    }
+
     fun btnClick() {
+        binding.header.text = "NOTES"
         binding.addNote.setOnClickListener {
             binding.firstLayout.visibility = View.GONE
             binding.secondLayout.visibility = View.VISIBLE
+            title.text.clear()
+            desc.text.clear()
+            binding.header.text = "ADD NOTE"
 
             binding.save.setOnClickListener {
                 add()
             }
         }
+        binding.bck.setOnClickListener {
+            if (binding.firstLayout.visibility == View.VISIBLE) {
+                findNavController().navigate(R.id.action_NotesFragment_to_SecondFragment)
+            } else {
+                binding.firstLayout.visibility = View.VISIBLE
+                binding.secondLayout.visibility = View.GONE
+                binding.header.text = "NOTES"
+            }
+        }
+
     }
 
     private fun initialize() {
@@ -89,6 +110,7 @@ class NotesFragment : Fragment(), StringOnClick {
         binding.firstLayout.visibility = View.VISIBLE
         binding.secondLayout.visibility = View.GONE
         notesModel.clear()
+        binding.header.text = "NOTES"
 
         fb.FirebaseDB().addValueEventListener(object : ValueEventListener {
             @SuppressLint("NotifyDataSetChanged")
@@ -117,12 +139,15 @@ class NotesFragment : Fragment(), StringOnClick {
                 TODO("Not yet implemented")
             }
         })
+
     }
 
     fun add() {
         binding.apply {
-            val data = NotesModel("", "notes",
-                desc.text.toString(), "", title.text.toString())
+            val data = NotesModel(
+                "", "notes",
+                desc.text.toString(), "", title.text.toString()
+            )
 
             fb.add(data)
                 .addOnSuccessListener {
@@ -138,6 +163,7 @@ class NotesFragment : Fragment(), StringOnClick {
         binding.apply {
             firstLayout.visibility = View.GONE
             secondLayout.visibility = View.VISIBLE
+            binding.header.text = "EDIT NOTE"
 
             notesModel[positon].apply {
                 this@NotesFragment.title.setText(title.toString())
@@ -171,31 +197,24 @@ class NotesFragment : Fragment(), StringOnClick {
     override fun onItemLongClick(position: Int, v: View?) {
         val builder = AlertDialog.Builder(context)
         builder.setMessage("Are you sure you want to Delete?")
-        .setCancelable(false)
-        .setPositiveButton("Yes") { _, _ ->
+            .setCancelable(false)
+            .setPositiveButton("Yes") { _, _ ->
 
-            fb.remove(notesModel[position].id.toString())
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(
-                        requireContext(),
-                        "deleted!!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-//                    notesModel.removeAt(position)
-//                    arrayAdapter?.notifyItemRemoved(position)
-//                    arrayAdapter?.notifyItemRangeChanged(position, notesModel.size);
-//
-//                    return@addOnCompleteListener
-
-                    getData()
-                }
+                fb.remove(notesModel[position].id.toString())
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(
+                                requireContext(),
+                                "deleted!!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            getData()
+                        }
+                    }
             }
-        }
-        .setNegativeButton("No") { dialog, _ ->
-            dialog.dismiss()
-        }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
 
         val alert = builder.create()
         alert.show()

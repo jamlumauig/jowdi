@@ -67,21 +67,5 @@
             android:id="@+id/action_NotesFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
 
-        <action
-            android:id="@+id/action_NotesFragment_to_EditNotes"
-            app:destination="@id/EditNotes" />
     </fragment>
-
-    <fragment
-        android:id="@+id/EditNotes"
-        android:name="jcb.bb.jowdi.Views.View.EditNotesFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_notes">
-
-        <action
-            android:id="@+id/action_EditNotesFragment_to_NotedFragment"
-            app:destination="@id/NotesFragment" />
-    </fragment>
-
-
 </navigation>

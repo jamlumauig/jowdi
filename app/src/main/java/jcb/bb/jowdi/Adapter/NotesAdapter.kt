@@ -1,29 +1,27 @@
 package jcb.bb.jowdi.Adapter
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import jcb.bb.jowdi.R
 import jcb.bb.jowdi.Views.Model.NotesModel
-import jcb.bb.jowdi.database.FirebaseDB
 import jcb.bb.jowdi.databinding.NotesssBinding
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-
 
 class NotesAdapter(
     var mainlist: ArrayList<NotesModel>,
-    var ideaClick: StringOnClick) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
-    class ViewHolder(binding: NotesssBinding, var LongClick: StringOnClick , var clickData: StringOnClick) :
-        RecyclerView.ViewHolder(binding.root), View.OnLongClickListener,  View.OnClickListener {
+    var ideaClick: StringOnClick
+) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+    class ViewHolder(
+        binding: NotesssBinding,
+        var LongClick: StringOnClick,
+        var clickData: StringOnClick
+    ) :
+        RecyclerView.ViewHolder(binding.root), View.OnLongClickListener, View.OnClickListener {
         var bindings: NotesssBinding = binding
         fun bindIdea(dataPor: NotesModel) {
 
@@ -54,8 +52,23 @@ class NotesAdapter(
             ), ideaClick, ideaClick
         )
 
-    override fun onBindViewHolder(@NonNull holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    override fun onBindViewHolder(
+        @NonNull holder: ViewHolder,
+        @SuppressLint("RecyclerView") position: Int
+    ) {
         holder.bindIdea(mainlist[position])
+
+        when {
+            position % 2 == 0 -> {
+                holder.bindings.listView.setBackgroundColor(Color.parseColor("#87cefe"))
+            }
+            position % 3 == 0 -> {
+                holder.bindings.listView.setBackgroundColor(Color.parseColor("#ee88bb"))
+            }
+            else -> {
+                holder.bindings.listView.setBackgroundColor(Color.parseColor("#392a50"))
+            }
+        }
     }
 
     override fun getItemCount(): Int {

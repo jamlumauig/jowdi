@@ -14,9 +14,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-
+            <ImageButton
+                android:id="@+id/back2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="fitXY"
+                android:layout_marginStart="10sp"
+                android:src="@drawable/back"
+                android:background="@drawable/back"
+                app:tint="#494646" />
             <TextView
                 android:id="@+id/titleeee"
                 android:layout_width="match_parent"
@@ -32,6 +45,7 @@
                 android:layout_margin="10dp"
                 android:textSize="30sp"
                 android:textStyle="bold" />
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rview"
@@ -43,6 +57,7 @@
             android:id="@+id/music"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <LinearLayout

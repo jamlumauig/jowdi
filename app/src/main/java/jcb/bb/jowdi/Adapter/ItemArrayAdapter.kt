@@ -8,17 +8,15 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import jcb.bb.jowdi.R
-import jcb.bb.jowdi.Views.Model.ListDataModel
+import jcb.bb.jowdi.Views.Model.NotesModel
 import jcb.bb.jowdi.databinding.CardviewBinding
 
-class ItemArrayAdapter(private var items: List<ListDataModel>, private val context: Context) :
+class ItemArrayAdapter(private var items: List<NotesModel>, private val context: Context) :
     RecyclerView.Adapter<ItemArrayAdapter.ViewHolder>() {
 
     private lateinit var dialog: Dialog

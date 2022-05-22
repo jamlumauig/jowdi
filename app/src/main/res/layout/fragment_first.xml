@@ -38,33 +38,18 @@
         <RelativeLayout
             android:id="@+id/secondLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/hbd"
+            android:layout_height="match_parent"
+            android:background="#BDD4D4"
             android:visibility="gone">
-<!--
+
             <VideoView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/video"/>-->
-
-         <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/animationView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:lottie_url="https://assets6.lottiefiles.com/packages/lf20_wzlghaye.json"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="false"/>
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/btn"
-                android:layout_width="150dp"
-                android:layout_height="100dp"
-                android:scaleType="fitCenter"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                app:lottie_url="https://assets8.lottiefiles.com/packages/lf20_yDnFTL.json"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"/>
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
+                android:id="@+id/simpleVideoView"/>
 
         </RelativeLayout>
     </RelativeLayout>

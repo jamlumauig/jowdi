@@ -9,12 +9,12 @@
 
     <application
         android:allowBackup="false"
+        android:hardwareAccelerated="false"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true"
         android:theme="@style/Theme.Jowdi">
 
         <activity
@@ -32,7 +32,7 @@
             android:name=".Views.View.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Jowdi.NoActionBar"/>
+            android:theme="@style/Theme.Jowdi.NoActionBar" />
 
         <meta-data
             android:name="preloaded_fonts"
